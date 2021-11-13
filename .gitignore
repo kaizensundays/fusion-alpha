@@ -5,3 +5,7 @@ target
 ignite
 
 *.iml
+*.log
+*.jar
+
+
