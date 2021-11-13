@@ -1,0 +1,11 @@
+
+.idea
+
+target
+ignite
+
+*.iml
+*.log
+*.jar
+
+
