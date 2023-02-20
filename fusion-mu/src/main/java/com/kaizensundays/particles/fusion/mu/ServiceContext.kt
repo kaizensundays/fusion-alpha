@@ -69,7 +69,14 @@ open class ServiceContext {
         mapping.urlMap = map
         mapping.order = Ordered.HIGHEST_PRECEDENCE
 
+        //val x = mapping.urlMap.remove("/ws/frontend")
+
         return mapping
+    }
+
+    @Bean
+    open fun defaultRestController(): DefaultRestController {
+        return DefaultRestController()
     }
 
 }

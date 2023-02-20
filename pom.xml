@@ -16,6 +16,9 @@
         <jetty.version>9.4.34.v20201102</jetty.version>
         <spring.version>5.3.12</spring.version>
         <spring.boot.version>2.5.6</spring.boot.version>
+        <!--
+                <spring.boot.version>2.2.13.RELEASE</spring.boot.version>
+        -->
         <jackson.version>2.12.6</jackson.version>
         <jackson.databind.version>2.12.6.1</jackson.databind.version>
         <jcache.version>1.1.0</jcache.version>
@@ -117,11 +120,13 @@
             </dependency>
 
             <!-- Reactor -->
-            <dependency>
-                <groupId>io.projectreactor</groupId>
-                <artifactId>reactor-core</artifactId>
-                <version>3.3.12.RELEASE</version>
-            </dependency>
+            <!--
+                        <dependency>
+                            <groupId>io.projectreactor</groupId>
+                            <artifactId>reactor-core</artifactId>
+                            <version>3.3.12.RELEASE</version>
+                        </dependency>
+            -->
 
             <!-- Gson -->
             <dependency>
