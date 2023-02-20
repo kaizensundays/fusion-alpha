@@ -60,7 +60,7 @@ open class ServiceContext {
     open fun handlerAdapter() = WebSocketHandlerAdapter()
 
     @Bean
-    open fun handlerMapping(frontEndWebSocketHandler: FrontEndWebSocketHandler): HandlerMapping {
+    open fun handlerMapping(frontEndWebSocketHandler: FrontEndWebSocketHandler): SimpleUrlHandlerMapping {
         val map = mapOf(
             "/ws/frontend" to frontEndWebSocketHandler
         )
@@ -75,8 +75,8 @@ open class ServiceContext {
     }
 
     @Bean
-    open fun defaultRestController(): DefaultRestController {
-        return DefaultRestController()
+    open fun defaultRestController(handlerMapping: SimpleUrlHandlerMapping): DefaultRestController {
+        return DefaultRestController(handlerMapping)
     }
 
 }
