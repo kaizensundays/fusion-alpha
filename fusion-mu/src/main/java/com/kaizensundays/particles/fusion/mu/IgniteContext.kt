@@ -60,7 +60,7 @@ open class IgniteContext {
                     .setExpiryPolicyFactory(CreatedExpiryPolicy.factoryOf(Duration(TimeUnit.DAYS, 1))),
             )
             .setIncludeEventTypes(
-                EventType.EVT_BASELINE_CHANGED, EventType.EVT_NODE_JOINED, EventType.EVT_NODE_LEFT
+                *EventType.EVTS_DISCOVERY
             )
 
         return IgniteFactoryBean(configuration)
@@ -70,8 +70,7 @@ open class IgniteContext {
     open fun baselineChangedListener(ignite: Ignite): IgnitePredicate<Event> {
         val listener = BaselineChangedListener(ignite)
         val events = ignite.events()
-        events.enableLocal(EventType.EVT_BASELINE_CHANGED, EventType.EVT_NODE_JOINED, EventType.EVT_NODE_LEFT)
-        events.localListen(listener, EventType.EVT_BASELINE_CHANGED, EventType.EVT_NODE_JOINED, EventType.EVT_NODE_LEFT)
+        events.localListen(listener, *EventType.EVTS_DISCOVERY)
         return listener
     }
 
