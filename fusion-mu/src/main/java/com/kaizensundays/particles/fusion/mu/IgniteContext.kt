@@ -2,11 +2,14 @@ package com.kaizensundays.particles.fusion.mu
 
 import com.kaizensundays.particles.fusion.mu.dao.FindFlightDao
 import com.kaizensundays.particles.fusion.mu.messages.FindFlight
+import org.apache.ignite.Ignite
 import org.apache.ignite.cache.CacheAtomicityMode
 import org.apache.ignite.configuration.CacheConfiguration
 import org.apache.ignite.configuration.IgniteConfiguration
 import org.apache.ignite.configuration.TopologyValidator
+import org.apache.ignite.events.Event
 import org.apache.ignite.events.EventType
+import org.apache.ignite.lang.IgnitePredicate
 import org.apache.ignite.logger.slf4j.Slf4jLogger
 import org.apache.ignite.spi.discovery.tcp.TcpDiscoverySpi
 import org.apache.ignite.spi.discovery.tcp.ipfinder.vm.TcpDiscoveryVmIpFinder
@@ -57,10 +60,19 @@ open class IgniteContext {
                     .setExpiryPolicyFactory(CreatedExpiryPolicy.factoryOf(Duration(TimeUnit.DAYS, 1))),
             )
             .setIncludeEventTypes(
-                EventType.EVT_CACHE_OBJECT_PUT
+                EventType.EVT_BASELINE_CHANGED, EventType.EVT_NODE_JOINED, EventType.EVT_NODE_LEFT
             )
 
         return IgniteFactoryBean(configuration)
+    }
+
+    @Bean
+    open fun baselineChangedListener(ignite: Ignite): IgnitePredicate<Event> {
+        val listener = BaselineChangedListener(ignite)
+        val events = ignite.events()
+        events.enableLocal(EventType.EVT_BASELINE_CHANGED, EventType.EVT_NODE_JOINED, EventType.EVT_NODE_LEFT)
+        events.localListen(listener, EventType.EVT_BASELINE_CHANGED, EventType.EVT_NODE_JOINED, EventType.EVT_NODE_LEFT)
+        return listener
     }
 
 }
