@@ -29,9 +29,16 @@ class FrontEndWebSocketHandler(private val handler: FindFlightHandler) : WebSock
         }
     }
 
+    val active = false
+
     override fun handle(session: WebSocketSession): Mono<Void> {
 
         val subscriber = session.receive()
+            .doOnSubscribe { subscription ->
+                if (!active) {
+                    subscription.cancel()
+                }
+            }
             .map { msg -> msg.payloadAsText }
             .log()
             .publishOn(Schedulers.elastic())
