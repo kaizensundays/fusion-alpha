@@ -9,4 +9,5 @@ start "Node" java -Xmx256m ^
 	-Djava.net.preferIPv4Stack=true ^
 	-Dreactor.netty.ioWorkerCount=4 ^
 	-Dreactor.schedulers.defaultPoolSize=4 ^
+        -Dfusion-mu.votes=1 ^
 	-jar service.jar
