@@ -10,9 +10,10 @@ import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Import
 import org.springframework.core.Ordered
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
-import org.springframework.web.reactive.HandlerMapping
 import org.springframework.web.reactive.handler.SimpleUrlHandlerMapping
+import org.springframework.web.reactive.socket.WebSocketSession
 import org.springframework.web.reactive.socket.server.support.WebSocketHandlerAdapter
+import java.util.concurrent.ConcurrentHashMap
 import javax.sql.DataSource
 
 /**
@@ -49,8 +50,13 @@ open class ServiceContext {
     }
 
     @Bean
-    open fun frontEndWebSocketHandler(findFlightHandler: FindFlightHandler): FrontEndWebSocketHandler {
-        return FrontEndWebSocketHandler(findFlightHandler)
+    open fun webSocketSessionMap(): MutableMap<String, WebSocketSession> {
+        return ConcurrentHashMap<String, WebSocketSession>()
+    }
+
+    @Bean
+    open fun frontEndWebSocketHandler(findFlightHandler: FindFlightHandler, webSocketSessionMap: MutableMap<String, WebSocketSession>): FrontEndWebSocketHandler {
+        return FrontEndWebSocketHandler(findFlightHandler, webSocketSessionMap)
     }
 
     @Bean
@@ -75,8 +81,8 @@ open class ServiceContext {
     }
 
     @Bean
-    open fun defaultRestController(handlerMapping: SimpleUrlHandlerMapping): DefaultRestController {
-        return DefaultRestController(handlerMapping)
+    open fun defaultRestController(webSocketSessionMap: MutableMap<String, WebSocketSession>): DefaultRestController {
+        return DefaultRestController(webSocketSessionMap)
     }
 
 }

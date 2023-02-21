@@ -15,7 +15,10 @@ import reactor.core.scheduler.Schedulers
  *
  * @author Sergey Chuykov
  */
-class FrontEndWebSocketHandler(private val handler: FindFlightHandler) : WebSocketHandler {
+class FrontEndWebSocketHandler(
+    private val handler: FindFlightHandler,
+    private val webSocketSessionMap: MutableMap<String, WebSocketSession>
+) : WebSocketHandler {
 
     private val converter = JacksonObjectConverter<Event>()
 
@@ -29,19 +32,21 @@ class FrontEndWebSocketHandler(private val handler: FindFlightHandler) : WebSock
         }
     }
 
-    val active = false
+    val active = true
 
     override fun handle(session: WebSocketSession): Mono<Void> {
 
         val subscriber = session.receive()
             .doOnSubscribe { subscription ->
-                if (!active) {
+                if (active) {
+                    webSocketSessionMap[session.id] = session
+                } else {
                     subscription.cancel()
                 }
             }
             .map { msg -> msg.payloadAsText }
             .log()
-            .publishOn(Schedulers.elastic())
+            .publishOn(Schedulers.boundedElastic())
             .map { json -> converter.toObject(json) }
             .flatMap { event -> handleEvent(event) }
             .map { flight -> converter.fromObject(flight) }
