@@ -13,6 +13,8 @@ import kotlin.test.assertEquals
  */
 class FindFlightConverterTest : MuTestSupport() {
 
+    private fun unixNL(s: String) = s.replace("\r\n", "\n")
+
     @Test
     fun test() {
 
@@ -43,7 +45,11 @@ class FindFlightConverterTest : MuTestSupport() {
 
         wire = wire.adjustFormat()
 
-        val json = Flights.read("/find-flights.json")
+        wire = unixNL(wire)
+
+        var json = Flights.read("/find-flights.json")
+
+        json = unixNL(json)
 
         assertEquals(json, wire)
 
