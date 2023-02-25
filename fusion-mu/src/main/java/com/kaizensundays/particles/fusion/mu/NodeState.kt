@@ -55,7 +55,7 @@ class NodeState(private val ignite: Ignite) : IgnitePredicate<Event> {
 
         val quorum = quorum(nodes)
 
-        return votes >= quorum
+        return votes > 0 && quorum > 0 && votes >= quorum
     }
 
     private fun print(nodes: Collection<ClusterNode>) {
@@ -73,9 +73,11 @@ class NodeState(private val ignite: Ignite) : IgnitePredicate<Event> {
         if (event is DiscoveryEvent) {
             val nodes = event.topologyNodes()
 
+            print(nodes)
+
             active.set(isActive(nodes))
 
-            print(nodes)
+            logger.info("Node is active: ${active.get()}")
         }
 
         return true

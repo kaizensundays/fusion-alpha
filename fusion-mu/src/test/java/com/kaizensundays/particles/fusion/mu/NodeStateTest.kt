@@ -35,6 +35,9 @@ class NodeStateTest {
     @Test
     fun isActive() {
 
+        assertFalse(state.isActive(listOf(node(0, 0))))
+        assertFalse(state.isActive(listOf(node(1, 0))))
+
         assertTrue(state.isActive(listOf(node(1, 1))))
 
         assertTrue(state.isActive(listOf(node(1, 2), node(1, 2), node(1, 2))))
