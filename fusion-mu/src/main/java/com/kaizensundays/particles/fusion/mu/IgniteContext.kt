@@ -7,9 +7,7 @@ import org.apache.ignite.cache.CacheAtomicityMode
 import org.apache.ignite.configuration.CacheConfiguration
 import org.apache.ignite.configuration.IgniteConfiguration
 import org.apache.ignite.configuration.TopologyValidator
-import org.apache.ignite.events.Event
 import org.apache.ignite.events.EventType
-import org.apache.ignite.lang.IgnitePredicate
 import org.apache.ignite.logger.slf4j.Slf4jLogger
 import org.apache.ignite.spi.discovery.tcp.TcpDiscoverySpi
 import org.apache.ignite.spi.discovery.tcp.ipfinder.vm.TcpDiscoveryVmIpFinder
@@ -67,11 +65,11 @@ open class IgniteContext {
     }
 
     @Bean
-    open fun baselineChangedListener(ignite: Ignite): IgnitePredicate<Event> {
-        val listener = BaselineChangedListener(ignite)
+    open fun nodeState(ignite: Ignite): NodeState {
+        val nodeState = NodeState(ignite)
         val events = ignite.events()
-        events.localListen(listener, *EventType.EVTS_DISCOVERY)
-        return listener
+        events.localListen(nodeState, *EventType.EVTS_DISCOVERY)
+        return nodeState
     }
 
 }

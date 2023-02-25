@@ -55,8 +55,8 @@ open class ServiceContext {
     }
 
     @Bean
-    open fun frontEndWebSocketHandler(findFlightHandler: FindFlightHandler, webSocketSessionMap: MutableMap<String, WebSocketSession>): FrontEndWebSocketHandler {
-        return FrontEndWebSocketHandler(findFlightHandler, webSocketSessionMap)
+    open fun frontEndWebSocketHandler(nodeState: NodeState, findFlightHandler: FindFlightHandler, webSocketSessionMap: MutableMap<String, WebSocketSession>): FrontEndWebSocketHandler {
+        return FrontEndWebSocketHandler(nodeState, findFlightHandler, webSocketSessionMap)
     }
 
     @Bean

@@ -16,6 +16,7 @@ import reactor.core.scheduler.Schedulers
  * @author Sergey Chuykov
  */
 class FrontEndWebSocketHandler(
+    private val nodeState: NodeState,
     private val handler: FindFlightHandler,
     private val webSocketSessionMap: MutableMap<String, WebSocketSession>
 ) : WebSocketHandler {
@@ -32,13 +33,11 @@ class FrontEndWebSocketHandler(
         }
     }
 
-    val active = true
-
     override fun handle(session: WebSocketSession): Mono<Void> {
 
         val subscriber = session.receive()
             .doOnSubscribe { subscription ->
-                if (active) {
+                if (nodeState.active.get()) {
                     webSocketSessionMap[session.id] = session
                 } else {
                     subscription.cancel()
