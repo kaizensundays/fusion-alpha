@@ -13,8 +13,6 @@ import kotlin.test.assertEquals
  */
 class FindFlightConverterTest : MuTestSupport() {
 
-    private fun unixNL(s: String) = s.replace("\r\n", "\n")
-
     @Test
     fun test() {
 
