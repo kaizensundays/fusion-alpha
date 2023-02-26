@@ -15,7 +15,7 @@ import javax.annotation.PostConstruct
  *
  * @author Sergey Chuykov
  */
-class NodeState(private val ignite: Ignite) : IgnitePredicate<Event> {
+class NodeState(private val ignite: Ignite) : IgnitePredicate<Event>, NodeStateListener {
 
     private val logger: Logger = LoggerFactory.getLogger(javaClass)
 
@@ -24,7 +24,18 @@ class NodeState(private val ignite: Ignite) : IgnitePredicate<Event> {
         const val CLUSTER_QUORUM_PROP = "cluster.quorum"
     }
 
-    val active = AtomicBoolean(false)
+    private val active = AtomicBoolean(false)
+
+    val nodeStateListeners = mutableListOf<NodeStateListener>()
+
+    override fun onStateChange(active: Boolean) {
+
+        this.active.set(active)
+
+        logger.info("Node is active: $active")
+
+        nodeStateListeners.forEach { listener -> listener.onStateChange(active) }
+    }
 
     fun getIntAttribute(node: ClusterNode, name: String, default: Int): Int {
         return node.attribute<String>(name)?.toInt() ?: default
@@ -75,9 +86,9 @@ class NodeState(private val ignite: Ignite) : IgnitePredicate<Event> {
 
             print(nodes)
 
-            active.set(isActive(nodes))
+            val active = isActive(nodes)
 
-            logger.info("Node is active: ${active.get()}")
+            onStateChange(active)
         }
 
         return true
@@ -90,9 +101,11 @@ class NodeState(private val ignite: Ignite) : IgnitePredicate<Event> {
 
         print(nodes)
 
-        active.set(isActive(nodes))
+        val active = isActive(nodes)
 
-        logger.info("Stared({${active.get()}})")
+        onStateChange(active)
+
+        logger.info("Stared({${active}})")
     }
 
 }

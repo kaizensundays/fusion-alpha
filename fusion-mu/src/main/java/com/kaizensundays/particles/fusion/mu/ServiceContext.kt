@@ -3,6 +3,7 @@ package com.kaizensundays.particles.fusion.mu
 import com.kaizensundays.particles.fusion.mu.dao.FindFlightDao
 import com.kaizensundays.particles.fusion.mu.dao.FindFlightLoader
 import org.apache.ignite.Ignite
+import org.apache.ignite.events.EventType
 import org.postgresql.ds.PGPoolingDataSource
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration
 import org.springframework.context.annotation.Bean
@@ -11,9 +12,7 @@ import org.springframework.context.annotation.Import
 import org.springframework.core.Ordered
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 import org.springframework.web.reactive.handler.SimpleUrlHandlerMapping
-import org.springframework.web.reactive.socket.WebSocketSession
 import org.springframework.web.reactive.socket.server.support.WebSocketHandlerAdapter
-import java.util.concurrent.ConcurrentHashMap
 import javax.sql.DataSource
 
 /**
@@ -50,13 +49,8 @@ open class ServiceContext {
     }
 
     @Bean
-    open fun webSocketSessionMap(): MutableMap<String, WebSocketSession> {
-        return ConcurrentHashMap<String, WebSocketSession>()
-    }
-
-    @Bean
-    open fun frontEndWebSocketHandler(nodeState: NodeState, findFlightHandler: FindFlightHandler, webSocketSessionMap: MutableMap<String, WebSocketSession>): FrontEndWebSocketHandler {
-        return FrontEndWebSocketHandler(nodeState, findFlightHandler, webSocketSessionMap)
+    open fun frontEndWebSocketHandler(findFlightHandler: FindFlightHandler): FrontEndWebSocketHandler {
+        return FrontEndWebSocketHandler(findFlightHandler)
     }
 
     @Bean
@@ -75,14 +69,21 @@ open class ServiceContext {
         mapping.urlMap = map
         mapping.order = Ordered.HIGHEST_PRECEDENCE
 
-        //val x = mapping.urlMap.remove("/ws/frontend")
-
         return mapping
     }
 
     @Bean
-    open fun defaultRestController(webSocketSessionMap: MutableMap<String, WebSocketSession>): DefaultRestController {
-        return DefaultRestController(webSocketSessionMap)
+    open fun nodeState(ignite: Ignite, frontEndWebSocketHandler: FrontEndWebSocketHandler): NodeState {
+        val nodeState = NodeState(ignite)
+        nodeState.nodeStateListeners.add(frontEndWebSocketHandler)
+        val events = ignite.events()
+        events.localListen(nodeState, *EventType.EVTS_DISCOVERY)
+        return nodeState
+    }
+
+    @Bean
+    open fun defaultRestController(): DefaultRestController {
+        return DefaultRestController()
     }
 
 }

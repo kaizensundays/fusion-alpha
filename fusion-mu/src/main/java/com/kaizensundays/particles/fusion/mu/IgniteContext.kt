@@ -64,12 +64,4 @@ open class IgniteContext {
         return IgniteFactoryBean(configuration)
     }
 
-    @Bean
-    open fun nodeState(ignite: Ignite): NodeState {
-        val nodeState = NodeState(ignite)
-        val events = ignite.events()
-        events.localListen(nodeState, *EventType.EVTS_DISCOVERY)
-        return nodeState
-    }
-
 }
