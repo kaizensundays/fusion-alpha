@@ -22,7 +22,7 @@ abstract class NodeStateAwareWebSocketHandler : WebSocketHandler, NodeStateListe
 
     private val sessionMap = mutableMapOf<String, WebSocketSession>()
 
-    protected fun onSubscribe(subscription: Subscription, session: WebSocketSession) {
+    protected fun addSession(session: WebSocketSession, subscription: Subscription) {
         if (active.get()) {
             sessionMap[session.id] = session
         } else {
@@ -30,31 +30,33 @@ abstract class NodeStateAwareWebSocketHandler : WebSocketHandler, NodeStateListe
         }
     }
 
-    fun closeSession(session: WebSocketSession?) {
-        if (session != null) {
+    protected fun removeSession(session: WebSocketSession) {
+        sessionMap.remove(session.id)
+        val closed = !session.isOpen
+        logger.info("Session ${session.id} is removed and closed ($closed)")
+    }
+
+    fun closeSession(session: WebSocketSession) {
+        try {
             logger.info("Closing session: ${session.id}")
-            try {
-                session.close(CloseStatus.GOING_AWAY)
-                    .doOnSuccess {
-                        val closed = !session.isOpen
-                        logger.info("Session closed=${closed}")
-                    }
-                    .block(Duration.ofSeconds(10))
-                sessionMap.remove(session.id)
-            } catch (e: Exception) {
-                logger.error(e.message, e)
-            }
+            session.close(CloseStatus.GOING_AWAY)
+                .block(Duration.ofSeconds(10))
+        } catch (e: Exception) {
+            logger.error(e.message, e)
         }
+    }
+
+    fun closeSessions() {
+        sessionMap.keys.toList()
+            .mapNotNull { sessionId -> sessionMap[sessionId] }
+            .forEach { session -> closeSession(session) }
     }
 
     override fun onStateChange(active: Boolean) {
         this.active.set(active)
 
         if (!active) {
-            HashSet(sessionMap.keys).forEach { sessionId ->
-                val session = sessionMap[sessionId]
-                closeSession(session)
-            }
+            closeSessions()
         }
     }
 

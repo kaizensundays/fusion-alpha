@@ -33,7 +33,7 @@ class FrontEndWebSocketHandler(
     override fun handle(session: WebSocketSession): Mono<Void> {
 
         val subscriber = session.receive()
-            .doOnSubscribe { subscription -> onSubscribe(subscription, session) }
+            .doOnSubscribe { subscription -> addSession(session, subscription) }
             .map { msg -> msg.payloadAsText }
             .log()
             .publishOn(Schedulers.boundedElastic())
@@ -45,6 +45,7 @@ class FrontEndWebSocketHandler(
 
 
         return session.send(subscriber)
+            .doOnTerminate { removeSession(session) }
     }
 
 }
