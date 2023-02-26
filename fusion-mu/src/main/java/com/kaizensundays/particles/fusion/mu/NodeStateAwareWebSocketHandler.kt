@@ -1,9 +1,12 @@
 package com.kaizensundays.particles.fusion.mu
 
 import org.reactivestreams.Subscription
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import org.springframework.web.reactive.socket.CloseStatus
 import org.springframework.web.reactive.socket.WebSocketHandler
 import org.springframework.web.reactive.socket.WebSocketSession
+import java.time.Duration
 import java.util.concurrent.atomic.AtomicBoolean
 
 /**
@@ -12,6 +15,8 @@ import java.util.concurrent.atomic.AtomicBoolean
  * @author Sergey Chuykov
  */
 abstract class NodeStateAwareWebSocketHandler : WebSocketHandler, NodeStateListener {
+
+    protected val logger: Logger = LoggerFactory.getLogger(javaClass)
 
     private val active = AtomicBoolean(false)
 
@@ -25,14 +30,30 @@ abstract class NodeStateAwareWebSocketHandler : WebSocketHandler, NodeStateListe
         }
     }
 
+    fun closeSession(session: WebSocketSession?) {
+        if (session != null) {
+            logger.info("Closing session: ${session.id}")
+            try {
+                session.close(CloseStatus.GOING_AWAY)
+                    .doOnSuccess {
+                        val closed = !session.isOpen
+                        logger.info("Session closed=${closed}")
+                    }
+                    .block(Duration.ofSeconds(10))
+                sessionMap.remove(session.id)
+            } catch (e: Exception) {
+                logger.error(e.message, e)
+            }
+        }
+    }
+
     override fun onStateChange(active: Boolean) {
         this.active.set(active)
 
         if (!active) {
-            sessionMap.keys.forEach { sessionId ->
+            HashSet(sessionMap.keys).forEach { sessionId ->
                 val session = sessionMap[sessionId]
-                session?.close(CloseStatus.GOING_AWAY)
-                sessionMap.remove(sessionId)
+                closeSession(session)
             }
         }
     }
