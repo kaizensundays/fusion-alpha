@@ -7,6 +7,6 @@ package com.kaizensundays.particles.fusion.mu.messages
  */
 data class Journal(
     val id: Long,
-    val msg: String,
-    val state: Int
+    val state: Int,
+    val msg: String
 ) : Event

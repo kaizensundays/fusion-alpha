@@ -16,4 +16,11 @@ class JournalDao(private val jdbc: NamedParameterJdbcTemplate) {
         return jdbc.query("select * from journal", rowMapper)
     }
 
+    fun insert(journal: Journal): Int {
+        return jdbc.update(
+            "insert into JOURNAL (STATE, MSG) VALUES (:state, :msg)",
+            mapOf("state" to journal.state, "msg" to journal.msg)
+        )
+    }
+
 }

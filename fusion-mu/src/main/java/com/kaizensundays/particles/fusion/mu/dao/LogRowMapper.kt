@@ -13,8 +13,8 @@ class LogRowMapper : RowMapper<Journal> {
     override fun mapRow(rs: ResultSet, rowNum: Int): Journal {
         return Journal(
             rs.getLong("id"),
-            rs.getString("msg"),
             rs.getInt("state"),
+            rs.getString("msg")
         )
     }
 }

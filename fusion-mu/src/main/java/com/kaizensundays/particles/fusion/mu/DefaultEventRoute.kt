@@ -3,11 +3,11 @@ package com.kaizensundays.particles.fusion.mu
 import com.kaizensundays.particles.fusion.mu.dao.JournalDao
 import com.kaizensundays.particles.fusion.mu.messages.Event
 import com.kaizensundays.particles.fusion.mu.messages.JacksonObjectConverter
+import com.kaizensundays.particles.fusion.mu.messages.Journal
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
-import java.util.concurrent.TimeUnit
 
 
 /**
@@ -28,20 +28,17 @@ class DefaultEventRoute(
     private fun journal(event: Event) {
 
         val msg = jsonConverter.fromObject(event)
+        logger.info(msg)
 
-        logger.info("" + msg)
+        val journal = Journal(0, 0, msg)
+
+        journalDao.insert(journal)
     }
 
     fun handle(event: Event) {
         logger.info("" + event)
 
-        val f = journalExecutor.submit(object : Runnable {
-            override fun run() {
-                journal(event)
-            }
-        })
-
-        f.get(10, TimeUnit.SECONDS)
+        journalExecutor.execute { journal(event) }
     }
 
 }
