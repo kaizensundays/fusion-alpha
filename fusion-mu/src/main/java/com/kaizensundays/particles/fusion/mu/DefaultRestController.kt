@@ -1,7 +1,10 @@
 package com.kaizensundays.particles.fusion.mu
 
+import com.kaizensundays.particles.fusion.mu.messages.AddAirline
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.ResponseBody
 import org.springframework.web.bind.annotation.RestController
@@ -13,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController
  */
 @RestController
 class DefaultRestController(
+    private val eventRoute: DefaultEventRoute
 ) {
 
     private val logger: Logger = LoggerFactory.getLogger(javaClass)
@@ -23,17 +27,13 @@ class DefaultRestController(
         return "Ok"
     }
 
-/*
     @ResponseBody
-    @RequestMapping("/sessions")
-    fun sessions(): String {
+    @PostMapping("/add/airline")
+    fun addAirline(@RequestBody addAirline: AddAirline): String {
 
-        webSocketSessionMap.forEach { (id, session) ->
-            logger.info("$id::${session.isOpen}::$session")
-        }
+        eventRoute.handle(addAirline)
 
         return "Ok"
     }
-*/
 
 }

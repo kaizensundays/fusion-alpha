@@ -74,6 +74,11 @@ open class ServiceContext {
     }
 
     @Bean
+    open fun defaultEventRoute(): DefaultEventRoute {
+        return DefaultEventRoute()
+    }
+
+    @Bean
     open fun nodeState(ignite: Ignite, frontEndWebSocketHandler: FrontEndWebSocketHandler): NodeState {
         val nodeState = NodeState(ignite)
         nodeState.nodeStateListeners.add(frontEndWebSocketHandler)
@@ -83,8 +88,8 @@ open class ServiceContext {
     }
 
     @Bean
-    open fun defaultRestController(): DefaultRestController {
-        return DefaultRestController()
+    open fun defaultRestController(defaultEventRoute: DefaultEventRoute): DefaultRestController {
+        return DefaultRestController(defaultEventRoute)
     }
 
 }
