@@ -18,8 +18,10 @@ class LogProperties {
 
     fun h2Url(): String {
         val path = File(h2Path)
-        if (!path.isDirectory) {
-            throw IllegalArgumentException("'$h2Path' not found")
+        if (!path.exists()) {
+            if (!path.mkdirs()) {
+                throw IllegalStateException("Unable to create directory" + path.canonicalPath)
+            }
         }
         return "jdbc:h2:" + path.canonicalPath + File.separator + h2DatabaseName
     }
