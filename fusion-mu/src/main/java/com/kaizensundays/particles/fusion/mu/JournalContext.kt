@@ -30,6 +30,6 @@ open class JournalContext {
     open fun journalH2Jdbc(journalH2DataSource: DataSource) = NamedParameterJdbcTemplate(journalH2DataSource)
 
     @Bean
-    open fun journalH2LogDao(journalH2Jdbc: NamedParameterJdbcTemplate) = JournalDao(journalH2Jdbc)
+    open fun journalH2Dao(journalH2Jdbc: NamedParameterJdbcTemplate) = JournalDao(journalH2Jdbc)
 
 }

@@ -2,6 +2,7 @@ package com.kaizensundays.particles.fusion.mu
 
 import com.kaizensundays.particles.fusion.mu.dao.FindFlightDao
 import com.kaizensundays.particles.fusion.mu.dao.FindFlightLoader
+import com.kaizensundays.particles.fusion.mu.dao.JournalDao
 import org.apache.ignite.Ignite
 import org.apache.ignite.events.EventType
 import org.postgresql.ds.PGPoolingDataSource
@@ -74,8 +75,8 @@ open class ServiceContext {
     }
 
     @Bean
-    open fun defaultEventRoute(): DefaultEventRoute {
-        return DefaultEventRoute()
+    open fun defaultEventRoute(journalH2Dao: JournalDao): DefaultEventRoute {
+        return DefaultEventRoute(journalH2Dao)
     }
 
     @Bean
