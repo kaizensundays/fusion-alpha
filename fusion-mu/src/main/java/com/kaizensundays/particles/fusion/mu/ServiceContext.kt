@@ -2,10 +2,8 @@ package com.kaizensundays.particles.fusion.mu
 
 import com.kaizensundays.particles.fusion.mu.dao.FindFlightDao
 import com.kaizensundays.particles.fusion.mu.dao.FindFlightLoader
-import com.kaizensundays.particles.fusion.mu.dao.LogDao
 import org.apache.ignite.Ignite
 import org.apache.ignite.events.EventType
-import org.h2.jdbcx.JdbcDataSource
 import org.postgresql.ds.PGPoolingDataSource
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration
 import org.springframework.context.annotation.Bean
