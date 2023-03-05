@@ -9,11 +9,13 @@ import java.sql.ResultSet
  *
  * @author Sergey Chuykov
  */
-class LogRowMapper : RowMapper<Journal> {
+class JournalRowMapper : RowMapper<Journal> {
     override fun mapRow(rs: ResultSet, rowNum: Int): Journal {
         return Journal(
             rs.getLong("id"),
             rs.getInt("state"),
+            rs.getString("time"),
+            rs.getString("uuid"),
             rs.getString("msg")
         )
     }

@@ -10,7 +10,7 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
  */
 class JournalDao(private val jdbc: NamedParameterJdbcTemplate) {
 
-    private val rowMapper = LogRowMapper()
+    private val rowMapper = JournalRowMapper()
 
     fun findAll(): List<Journal> {
         return jdbc.query("select * from journal", rowMapper)
@@ -18,8 +18,11 @@ class JournalDao(private val jdbc: NamedParameterJdbcTemplate) {
 
     fun insert(journal: Journal): Int {
         return jdbc.update(
-            "insert into JOURNAL (STATE, MSG) VALUES (:state, :msg)",
-            mapOf("state" to journal.state, "msg" to journal.msg)
+            "insert into JOURNAL (STATE,TIME, UUID, MSG) VALUES (:state, :time, :uuid, :msg)",
+            mapOf(
+                "state" to journal.state, "time" to journal.time, "uuid" to journal.uuid, "msg" to journal.msg,
+                "x" to "X"
+            )
         )
     }
 
