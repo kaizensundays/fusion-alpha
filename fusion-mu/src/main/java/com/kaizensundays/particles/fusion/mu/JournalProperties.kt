@@ -8,8 +8,8 @@ import java.io.File
  *
  * @author Sergey Chuykov
  */
-@ConfigurationProperties(prefix = "log")
-class LogProperties {
+@ConfigurationProperties(prefix = "journal")
+class JournalProperties {
 
     var h2Path: String = ""
     var h2DatabaseName: String = ""

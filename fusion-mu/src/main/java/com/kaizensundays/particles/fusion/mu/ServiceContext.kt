@@ -22,7 +22,7 @@ import javax.sql.DataSource
  */
 @Configuration
 @EnableAutoConfiguration
-@Import(IgniteContext::class, LogContext::class)
+@Import(IgniteContext::class, JournalContext::class)
 open class ServiceContext {
 
     @Bean

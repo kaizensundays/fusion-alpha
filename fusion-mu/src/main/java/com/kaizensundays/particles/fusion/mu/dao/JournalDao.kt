@@ -1,6 +1,6 @@
 package com.kaizensundays.particles.fusion.mu.dao
 
-import com.kaizensundays.particles.fusion.mu.messages.Log
+import com.kaizensundays.particles.fusion.mu.messages.Journal
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 
 /**
@@ -8,12 +8,12 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
  *
  * @author Sergey Chuykov
  */
-class LogDao(private val jdbc: NamedParameterJdbcTemplate) {
+class JournalDao(private val jdbc: NamedParameterJdbcTemplate) {
 
     private val rowMapper = LogRowMapper()
 
-    fun findAll(): List<Log> {
-        return jdbc.query("select * from log", rowMapper)
+    fun findAll(): List<Journal> {
+        return jdbc.query("select * from journal", rowMapper)
     }
 
 }

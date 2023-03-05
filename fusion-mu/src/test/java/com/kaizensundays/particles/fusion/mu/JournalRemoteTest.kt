@@ -1,6 +1,6 @@
 package com.kaizensundays.particles.fusion.mu
 
-import com.kaizensundays.particles.fusion.mu.dao.LogDao
+import com.kaizensundays.particles.fusion.mu.dao.JournalDao
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.springframework.beans.factory.annotation.Autowired
@@ -16,18 +16,18 @@ import kotlin.test.assertEquals
  */
 @ActiveProfiles("test")
 @RunWith(SpringRunner::class)
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE, classes = [LogContext::class])
-class H2LogRemoteTest : MuTestSupport() {
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE, classes = [JournalContext::class])
+class JournalRemoteTest : MuTestSupport() {
 
     @Autowired
-    lateinit var dao: LogDao
+    lateinit var dao: JournalDao
 
     @Test
     fun findAll() {
 
-        val log = dao.findAll()
+        val journal = dao.findAll()
 
-        assertEquals(1, log.size)
+        assertEquals(3, journal.size)
     }
 
 }

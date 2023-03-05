@@ -5,7 +5,7 @@ package com.kaizensundays.particles.fusion.mu.messages
  *
  * @author Sergey Chuykov
  */
-data class Log(
+data class Journal(
     val id: Long,
     val msg: String,
     val state: Int

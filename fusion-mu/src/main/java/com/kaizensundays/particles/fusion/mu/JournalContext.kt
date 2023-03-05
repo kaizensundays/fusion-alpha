@@ -1,6 +1,6 @@
 package com.kaizensundays.particles.fusion.mu
 
-import com.kaizensundays.particles.fusion.mu.dao.LogDao
+import com.kaizensundays.particles.fusion.mu.dao.JournalDao
 import org.h2.jdbcx.JdbcDataSource
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean
@@ -14,11 +14,11 @@ import javax.sql.DataSource
  * @author Sergey Chuykov
  */
 @Configuration
-@EnableConfigurationProperties(value = [LogProperties::class])
-open class LogContext {
+@EnableConfigurationProperties(value = [JournalProperties::class])
+open class JournalContext {
 
     @Bean
-    open fun h2LogDataSource(props: LogProperties): DataSource {
+    open fun journalH2DataSource(props: JournalProperties): DataSource {
         val ds = JdbcDataSource()
         ds.setURL(props.h2Url())
         ds.user = props.h2User
@@ -27,9 +27,9 @@ open class LogContext {
     }
 
     @Bean
-    open fun h2Jdbc(h2LogDataSource: DataSource) = NamedParameterJdbcTemplate(h2LogDataSource)
+    open fun journalH2Jdbc(journalH2DataSource: DataSource) = NamedParameterJdbcTemplate(journalH2DataSource)
 
     @Bean
-    open fun h2LogDao(h2Jdbc: NamedParameterJdbcTemplate) = LogDao(h2Jdbc)
+    open fun journalH2LogDao(journalH2Jdbc: NamedParameterJdbcTemplate) = JournalDao(journalH2Jdbc)
 
 }
