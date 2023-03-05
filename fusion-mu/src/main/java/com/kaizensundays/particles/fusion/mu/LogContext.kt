@@ -20,7 +20,7 @@ open class LogContext {
     @Bean
     open fun h2LogDataSource(props: LogProperties): DataSource {
         val ds = JdbcDataSource()
-        ds.setURL(props.h2Url)
+        ds.setURL(props.h2Url())
         ds.user = props.h2User
         ds.password = props.h2Password
         return ds
