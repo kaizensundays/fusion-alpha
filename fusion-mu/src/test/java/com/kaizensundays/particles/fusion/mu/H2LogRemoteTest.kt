@@ -14,7 +14,7 @@ import kotlin.test.assertEquals
  * @author Sergey Chuykov
  */
 @RunWith(SpringRunner::class)
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE, classes = [ServiceContext::class])
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE, classes = [LogContext::class])
 class H2LogRemoteTest : MuTestSupport() {
 
     @Autowired
@@ -23,7 +23,7 @@ class H2LogRemoteTest : MuTestSupport() {
     @Test
     fun findAll() {
 
-       val log = dao.findAll()
+        val log = dao.findAll()
 
         assertEquals(1, log.size)
     }

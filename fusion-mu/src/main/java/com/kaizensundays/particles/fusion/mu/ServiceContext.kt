@@ -24,7 +24,7 @@ import javax.sql.DataSource
  */
 @Configuration
 @EnableAutoConfiguration
-@Import(IgniteContext::class)
+@Import(IgniteContext::class, LogContext::class)
 open class ServiceContext {
 
     @Bean
@@ -37,26 +37,9 @@ open class ServiceContext {
         return ds
     }
 
-    @Bean
-    open fun h2LogDataSource(): DataSource {
-        val ds = JdbcDataSource()
-        //ds.setURL("jdbc:h2:J:/super/projects/kaizensundays/fusion-alpha-2/fusion-mu/bin/h2/log")
-        ds.setURL("jdbc:h2:J:/super/projects/kaizensundays/fusion-alpha-2/fusion-mu/bin/h2/log")
-        ds.user = ""
-        ds.password = ""
-        return ds
-    }
-
-    @Bean
-    open fun h2Jdbc(h2LogDataSource: DataSource) = NamedParameterJdbcTemplate(h2LogDataSource)
 
     @Bean
     open fun jdbc(dataSource: DataSource) = NamedParameterJdbcTemplate(dataSource)
-
-    @Bean
-    open fun h2LogDao(h2Jdbc: NamedParameterJdbcTemplate): LogDao {
-        return LogDao(h2Jdbc)
-    }
 
     @Bean
     open fun findFlightDao(jdbc: NamedParameterJdbcTemplate): FindFlightDao {
