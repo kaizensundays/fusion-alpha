@@ -2,6 +2,7 @@ package com.kaizensundays.particles.fusion.mu
 
 import com.kaizensundays.particles.fusion.mu.dao.LogDao
 import org.h2.jdbcx.JdbcDataSource
+import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
@@ -13,15 +14,15 @@ import javax.sql.DataSource
  * @author Sergey Chuykov
  */
 @Configuration
+@EnableConfigurationProperties(value = [LogProperties::class])
 open class LogContext {
 
     @Bean
-    open fun h2LogDataSource(): DataSource {
+    open fun h2LogDataSource(props: LogProperties): DataSource {
         val ds = JdbcDataSource()
-        //ds.setURL("jdbc:h2:J:/super/projects/kaizensundays/fusion-alpha-2/fusion-mu/bin/h2/log")
-        ds.setURL("jdbc:h2:J:/super/projects/kaizensundays/fusion-alpha-2/fusion-mu/bin/h2/log")
-        ds.user = ""
-        ds.password = ""
+        ds.setURL(props.h2Url)
+        ds.user = props.h2User
+        ds.password = props.h2Password
         return ds
     }
 

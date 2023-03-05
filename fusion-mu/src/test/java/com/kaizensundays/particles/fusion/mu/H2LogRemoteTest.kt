@@ -5,6 +5,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.junit4.SpringRunner
 import kotlin.test.assertEquals
 
@@ -13,6 +14,7 @@ import kotlin.test.assertEquals
  *
  * @author Sergey Chuykov
  */
+@ActiveProfiles("test")
 @RunWith(SpringRunner::class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE, classes = [LogContext::class])
 class H2LogRemoteTest : MuTestSupport() {
