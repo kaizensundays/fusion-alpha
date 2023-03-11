@@ -25,7 +25,7 @@ class JournalDao(private val jdbc: NamedParameterJdbcTemplate) : RowMapper<Journ
     fun tableExist(tableName: String): Boolean {
         return jdbc.queryForObject(
             "SELECT EXISTS(SELECT 1 FROM information_schema.tables WHERE table_name = :tableName)",
-            mapOf("tableName" to tableName), Boolean::class.java
+            mapOf("tableName" to tableName.uppercase()), Boolean::class.java
         ) ?: false
     }
 
@@ -43,6 +43,10 @@ class JournalDao(private val jdbc: NamedParameterJdbcTemplate) : RowMapper<Journ
 
     fun findAll(): List<Journal> {
         return jdbc.query("select * from journal", this)
+    }
+
+    fun truncate(): Int {
+        return jdbc.update("truncate table journal", mapOf<String, Any>())
     }
 
     fun insert(journal: Journal): Int {
