@@ -1,19 +1,29 @@
 package com.kaizensundays.particles.fusion.mu.dao
 
 import com.kaizensundays.particles.fusion.mu.messages.Journal
+import org.springframework.jdbc.core.RowMapper
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
+import java.sql.ResultSet
 
 /**
  * Created: Saturday 3/4/2023, 11:56 AM Eastern Time
  *
  * @author Sergey Chuykov
  */
-class JournalDao(private val jdbc: NamedParameterJdbcTemplate) {
+class JournalDao(private val jdbc: NamedParameterJdbcTemplate) : RowMapper<Journal> {
 
-    private val rowMapper = JournalRowMapper()
+    override fun mapRow(rs: ResultSet, rowNum: Int): Journal {
+        return Journal(
+            rs.getLong("id"),
+            rs.getInt("state"),
+            rs.getString("time"),
+            rs.getString("uuid"),
+            rs.getString("msg")
+        )
+    }
 
     fun findAll(): List<Journal> {
-        return jdbc.query("select * from journal", rowMapper)
+        return jdbc.query("select * from journal", this)
     }
 
     fun insert(journal: Journal): Int {
