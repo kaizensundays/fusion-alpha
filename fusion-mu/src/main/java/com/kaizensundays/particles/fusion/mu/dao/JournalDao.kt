@@ -22,6 +22,13 @@ class JournalDao(private val jdbc: NamedParameterJdbcTemplate) : RowMapper<Journ
         )
     }
 
+    fun tableExist(tableName: String): Boolean {
+        return jdbc.queryForObject(
+            "SELECT EXISTS(SELECT 1 FROM information_schema.tables WHERE table_name = :tableName)",
+            mapOf("tableName" to tableName), Boolean::class.java
+        ) ?: false
+    }
+
     fun findAll(): List<Journal> {
         return jdbc.query("select * from journal", this)
     }
