@@ -3,6 +3,9 @@ package com.kaizensundays.particles.fusion.mu
 import com.kaizensundays.particles.fusion.mu.dao.FindFlightDao
 import com.kaizensundays.particles.fusion.mu.dao.FindFlightLoader
 import com.kaizensundays.particles.fusion.mu.dao.JournalDao
+import com.kaizensundays.particles.fusion.mu.messages.AddAirline
+import com.kaizensundays.particles.fusion.mu.messages.Event
+import com.kaizensundays.particles.fusion.mu.messages.FindFlight
 import org.apache.ignite.Ignite
 import org.apache.ignite.events.EventType
 import org.postgresql.ds.PGPoolingDataSource
@@ -75,8 +78,17 @@ open class ServiceContext {
     }
 
     @Bean
-    open fun defaultEventRoute(journalH2Dao: JournalDao): DefaultEventRoute {
-        return DefaultEventRoute(journalH2Dao)
+    open fun handlers(findFlightHandler: FindFlightHandler): Map<Class<out Event>, Handler<Event>> {
+        val map: Map<Class<out Event>, Handler<*>> = mapOf(
+            AddAirline::class.java to AddAirlineHandler(),
+            FindFlight::class.java to findFlightHandler
+        )
+        return map as Map<Class<out Event>, Handler<Event>>
+    }
+
+    @Bean
+    open fun defaultEventRoute(journalH2Dao: JournalDao, handlers: Map<Class<out Event>, Handler<Event>>): DefaultEventRoute {
+        return DefaultEventRoute(journalH2Dao, handlers)
     }
 
     @Bean

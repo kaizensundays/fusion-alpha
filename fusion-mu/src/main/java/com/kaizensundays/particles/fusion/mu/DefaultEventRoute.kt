@@ -19,7 +19,8 @@ import java.util.concurrent.Executors
  * @author Sergey Chuykov
  */
 class DefaultEventRoute(
-    private val journalDao: JournalDao
+    private val journalDao: JournalDao,
+    private val handlers: Map<Class<out Event>, Handler<Event>>
 ) {
 
     private val logger: Logger = LoggerFactory.getLogger(javaClass)
@@ -28,10 +29,21 @@ class DefaultEventRoute(
 
     private val jsonConverter = JacksonObjectConverter<Event>()
 
+    private val defaultExecutor: ExecutorService = Executors.newSingleThreadExecutor { r -> Thread(r, "D") }
     private val journalExecutor: ExecutorService = Executors.newSingleThreadExecutor { r -> Thread(r, "J") }
 
     init {
         df.timeZone = TimeZone.getTimeZone("UTC")
+    }
+
+    private fun execute(event: Event) {
+
+        val handler = handlers[event.javaClass]
+
+        @Suppress("IfThenToSafeAccess")
+        if (handler != null) {
+            handler.handle(event)
+        }
     }
 
     private fun journal(event: Event) {
@@ -42,6 +54,8 @@ class DefaultEventRoute(
         val journal = Journal(0, JournalState.ACCEPTED.value, df.format(Date()), UUID.randomUUID().toString(), msg)
 
         journalDao.insert(journal)
+
+        defaultExecutor.execute { execute(event) }
     }
 
     fun handle(event: Event) {
