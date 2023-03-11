@@ -1,6 +1,7 @@
 package com.kaizensundays.particles.fusion.mu.dao
 
 import com.kaizensundays.particles.fusion.mu.JournalContext
+import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.springframework.beans.factory.annotation.Autowired
@@ -21,9 +22,17 @@ class JournalDaoTest {
     @Autowired
     lateinit var dao: JournalDao
 
-    @Test
-    fun findAll() {
+    @Before
+    fun before() {
         val exist = dao.tableExist("journal")
+        if (!exist) {
+            dao.createTable()
+        }
+    }
+
+    @Test
+    fun test() {
+
     }
 
 }

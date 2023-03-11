@@ -29,6 +29,18 @@ class JournalDao(private val jdbc: NamedParameterJdbcTemplate) : RowMapper<Journ
         ) ?: false
     }
 
+    fun createTable(): Int {
+        return jdbc.update(
+            "CREATE TABLE IF NOT EXISTS journal (" +
+                    " ID BIGINT auto_increment PRIMARY KEY, STATE INT," +
+                    " TIME VARCHAR(32)," +
+                    " UUID VARCHAR(36)," +
+                    " MSG VARCHAR(1000)" +
+                    ")",
+            mapOf<String, Any>()
+        )
+    }
+
     fun findAll(): List<Journal> {
         return jdbc.query("select * from journal", this)
     }
