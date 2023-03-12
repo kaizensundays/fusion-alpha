@@ -10,5 +10,7 @@ data class Journal(
     val state: Int,
     val time: String,
     val uuid: String,
-    val msg: String
-) : Event
+    val msg: String,
+    @Transient
+    var event: Event? = null
+) : JacksonSerializable

@@ -34,7 +34,7 @@ class DefaultEventRoute(
 
     private val defaultExecutor: ExecutorService = Executors.newSingleThreadExecutor { r -> Thread(r, "D") }
 
-    private val queue = ArrayBlockingQueue<Event>(1000)
+    private val queue = ArrayBlockingQueue<Journal>(1000)
 
     private val journalExecutor: ExecutorService = Executors.newSingleThreadExecutor { r -> Thread(r, "J") }
 
@@ -48,18 +48,22 @@ class DefaultEventRoute(
 
         val handler = handlers[event.javaClass]
 
-        @Suppress("IfThenToSafeAccess")
         if (handler != null) {
             handler.handle(event)
+        } else {
+            logger.info("Unexpected message type: ${event.javaClass}")
         }
     }
 
     private fun execute() {
 
         while (running.get()) {
-            val event = queue.poll(1, TimeUnit.SECONDS)
-            if (event != null) {
-                execute(event)
+            val journal = queue.poll(1, TimeUnit.SECONDS)
+            if (journal != null) {
+                val event = journal.event
+                if (event != null) {
+                    execute(event)
+                }
             }
         }
     }
@@ -69,11 +73,11 @@ class DefaultEventRoute(
         val msg = jsonConverter.fromObject(event)
         logger.info(msg)
 
-        val journal = Journal(0, JournalState.ACCEPTED.value, df.format(Date()), UUID.randomUUID().toString(), msg)
+        val journal = Journal(0, JournalState.ACCEPTED.value, df.format(Date()), UUID.randomUUID().toString(), msg, event)
 
         journalDao.insert(journal)
 
-        queue.put(event)
+        queue.put(journal)
     }
 
     fun handle(event: Event) {
@@ -86,10 +90,17 @@ class DefaultEventRoute(
 
         val journals = journalDao.findByState(JournalState.ACCEPTED.value)
 
-        journals.forEach { journal ->
-            val event = jsonConverter.toObject(journal.msg)
-            queue.put(event)
+        if (journals.isNotEmpty()) {
+            logger.info("Recovering ${journals.size} accepted events")
         }
+
+        journals.forEach { journal ->
+            journal.event = jsonConverter.toObject(journal.msg)
+            queue.put(journal)
+            logger.info(journal.toString())
+        }
+
+        logger.info("Loaded ${journals.size} accepted events")
     }
 
     @PostConstruct
