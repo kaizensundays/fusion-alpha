@@ -9,9 +9,12 @@ import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import java.text.SimpleDateFormat
 import java.util.*
+import java.util.concurrent.ArrayBlockingQueue
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
-
+import java.util.concurrent.TimeUnit
+import java.util.concurrent.atomic.AtomicBoolean
+import javax.annotation.PostConstruct
 
 /**
  * Created: Sunday 3/5/2023, 11:24 AM Eastern Time
@@ -25,15 +28,20 @@ class DefaultEventRoute(
 
     private val logger: Logger = LoggerFactory.getLogger(javaClass)
 
-    private val df = SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSSz")
+    private val df = SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS z")
 
     private val jsonConverter = JacksonObjectConverter<Event>()
 
     private val defaultExecutor: ExecutorService = Executors.newSingleThreadExecutor { r -> Thread(r, "D") }
+
+    private val queue = ArrayBlockingQueue<Event>(1000)
+
     private val journalExecutor: ExecutorService = Executors.newSingleThreadExecutor { r -> Thread(r, "J") }
 
+    private val running = AtomicBoolean(true)
+
     init {
-        df.timeZone = TimeZone.getTimeZone("UTC")
+        df.timeZone = TimeZone.getTimeZone("America/New_York")
     }
 
     private fun execute(event: Event) {
@@ -46,6 +54,16 @@ class DefaultEventRoute(
         }
     }
 
+    private fun execute() {
+
+        while (running.get()) {
+            val event = queue.poll(1, TimeUnit.SECONDS)
+            if (event != null) {
+                execute(event)
+            }
+        }
+    }
+
     private fun journal(event: Event) {
 
         val msg = jsonConverter.fromObject(event)
@@ -55,13 +73,21 @@ class DefaultEventRoute(
 
         journalDao.insert(journal)
 
-        defaultExecutor.execute { execute(event) }
+        queue.put(event)
     }
 
     fun handle(event: Event) {
         logger.info("" + event)
 
         journalExecutor.execute { journal(event) }
+    }
+
+    @PostConstruct
+    fun start() {
+
+        defaultExecutor.execute { execute() }
+
+        logger.info("Started")
     }
 
 }
