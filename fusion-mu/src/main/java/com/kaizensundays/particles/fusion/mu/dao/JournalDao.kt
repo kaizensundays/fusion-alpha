@@ -1,6 +1,7 @@
 package com.kaizensundays.particles.fusion.mu.dao
 
 import com.kaizensundays.particles.fusion.mu.messages.Journal
+import com.kaizensundays.particles.fusion.mu.messages.JournalState
 import org.springframework.jdbc.core.RowMapper
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 import java.sql.ResultSet
@@ -61,6 +62,10 @@ class JournalDao(private val jdbc: NamedParameterJdbcTemplate) : RowMapper<Journ
                 "x" to "X"
             )
         )
+    }
+
+    fun updateStateById(id: Long, state: JournalState) {
+        jdbc.update("update JOURNAL set STATE=:state where ID=:id", mapOf("id" to id, "state" to state.value))
     }
 
 }

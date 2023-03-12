@@ -44,15 +44,20 @@ class DefaultEventRoute(
         df.timeZone = TimeZone.getTimeZone("America/New_York")
     }
 
-    private fun execute(event: Event) {
+    private fun execute(journal: Journal) {
 
-        val handler = handlers[event.javaClass]
+        val event = journal.event
+        if (event != null) {
 
-        if (handler != null) {
-            handler.handle(event)
-        } else {
-            logger.info("Unexpected message type: ${event.javaClass}")
+            val handler = handlers[event.javaClass]
+            if (handler != null) {
+                handler.handle(event)
+            } else {
+                logger.info("Unexpected message type: ${event.javaClass}")
+            }
         }
+
+        journalDao.updateStateById(journal.id, JournalState.COMMITTED)
     }
 
     private fun execute() {
@@ -60,10 +65,7 @@ class DefaultEventRoute(
         while (running.get()) {
             val journal = queue.poll(1, TimeUnit.SECONDS)
             if (journal != null) {
-                val event = journal.event
-                if (event != null) {
-                    execute(event)
-                }
+                execute(journal)
             }
         }
     }
