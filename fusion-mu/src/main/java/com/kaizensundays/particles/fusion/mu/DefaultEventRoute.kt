@@ -23,6 +23,7 @@ import javax.annotation.PostConstruct
  */
 class DefaultEventRoute(
     private val journalDao: JournalDao,
+    private val journalManager: JournalManager,
     private val handlers: Map<Class<out Event>, Handler<Event>>
 ) {
 
@@ -57,7 +58,7 @@ class DefaultEventRoute(
             }
         }
 
-        journalDao.updateStateById(journal.id, JournalState.COMMITTED)
+        journalManager.commit(journal)
     }
 
     private fun execute() {

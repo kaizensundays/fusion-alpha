@@ -87,8 +87,8 @@ open class ServiceContext {
     }
 
     @Bean
-    open fun defaultEventRoute(journalH2Dao: JournalDao, handlers: Map<Class<out Event>, Handler<Event>>): DefaultEventRoute {
-        return DefaultEventRoute(journalH2Dao, handlers)
+    open fun defaultEventRoute(journalH2Dao: JournalDao, journalManager: JournalManager, handlers: Map<Class<out Event>, Handler<Event>>): DefaultEventRoute {
+        return DefaultEventRoute(journalH2Dao, journalManager, handlers)
     }
 
     @Bean

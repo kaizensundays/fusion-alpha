@@ -32,4 +32,7 @@ open class JournalContext {
     @Bean
     open fun journalH2Dao(journalH2Jdbc: NamedParameterJdbcTemplate) = JournalDao(journalH2Jdbc)
 
+    @Bean
+    open fun journalManager(journalDao: JournalDao) = JournalManager(journalDao)
+
 }
