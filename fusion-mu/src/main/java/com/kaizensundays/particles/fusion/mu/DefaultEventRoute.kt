@@ -82,8 +82,20 @@ class DefaultEventRoute(
         journalExecutor.execute { journal(event) }
     }
 
+    private fun load() {
+
+        val journals = journalDao.findByState(JournalState.ACCEPTED.value)
+
+        journals.forEach { journal ->
+            val event = jsonConverter.toObject(journal.msg)
+            queue.put(event)
+        }
+    }
+
     @PostConstruct
     fun start() {
+
+        defaultExecutor.execute { load() }
 
         defaultExecutor.execute { execute() }
 

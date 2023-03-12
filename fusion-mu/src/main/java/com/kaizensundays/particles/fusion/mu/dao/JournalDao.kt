@@ -45,6 +45,10 @@ class JournalDao(private val jdbc: NamedParameterJdbcTemplate) : RowMapper<Journ
         return jdbc.query("select * from journal", this)
     }
 
+    fun findByState(state: Int): List<Journal> {
+        return jdbc.query("select * from journal where state=:state order by id", mapOf("state" to state), this)
+    }
+
     fun truncate(): Int {
         return jdbc.update("truncate table journal", mapOf<String, Any>())
     }
