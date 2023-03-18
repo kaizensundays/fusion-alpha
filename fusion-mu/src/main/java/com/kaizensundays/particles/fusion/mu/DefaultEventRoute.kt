@@ -89,27 +89,10 @@ class DefaultEventRoute(
         journalExecutor.execute { journal(event) }
     }
 
-    private fun load() {
-
-        val journals = journalDao.findByState(JournalState.ACCEPTED.value)
-
-        if (journals.isNotEmpty()) {
-            logger.info("Recovering ${journals.size} accepted events")
-        }
-
-        journals.forEach { journal ->
-            journal.event = jsonConverter.toObject(journal.msg)
-            messageQueue.put(journal)
-            logger.info(journal.toString())
-        }
-
-        logger.info("Loaded ${journals.size} accepted events")
-    }
-
     @PostConstruct
     fun start() {
 
-        defaultExecutor.execute { load() }
+        defaultExecutor.execute { journalManager.load() }
 
         defaultExecutor.execute { execute() }
 
