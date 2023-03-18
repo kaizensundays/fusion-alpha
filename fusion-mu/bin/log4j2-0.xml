@@ -10,6 +10,7 @@
     </Appenders>
     <Loggers>
         <Logger name="org.springframework" level="INFO"/>
+        <Logger name="org.springframework.jdbc" level="TRACE"/>
         <Logger name="io.netty" level="INFO"/>
         <Logger name="reactor.netty" level="INFO"/>
         <Logger name="org.apache.ignite" level="INFO"/>

@@ -9,7 +9,7 @@ import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import java.text.SimpleDateFormat
 import java.util.*
-import java.util.concurrent.ArrayBlockingQueue
+import java.util.concurrent.BlockingQueue
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
@@ -23,6 +23,7 @@ import javax.annotation.PostConstruct
  */
 class DefaultEventRoute(
     private val journalDao: JournalDao,
+    private val messageQueue: BlockingQueue<Journal>,
     private val journalManager: JournalManager,
     private val handlers: Map<Class<out Event>, Handler<Event>>
 ) {
@@ -34,8 +35,6 @@ class DefaultEventRoute(
     private val jsonConverter = JacksonObjectConverter<Event>()
 
     private val defaultExecutor: ExecutorService = Executors.newSingleThreadExecutor { r -> Thread(r, "D") }
-
-    private val queue = ArrayBlockingQueue<Journal>(1000)
 
     private val journalExecutor: ExecutorService = Executors.newSingleThreadExecutor { r -> Thread(r, "J") }
 
@@ -57,14 +56,15 @@ class DefaultEventRoute(
                 logger.info("Unexpected message type: ${event.javaClass}")
             }
         }
-
-        journalManager.commit(journal)
+        if (journalManager.commit(journal) == 0) {
+            logger.error("Unable to commit journal")
+        }
     }
 
     private fun execute() {
 
         while (running.get()) {
-            val journal = queue.poll(1, TimeUnit.SECONDS)
+            val journal = messageQueue.poll(1, TimeUnit.SECONDS)
             if (journal != null) {
                 execute(journal)
             }
@@ -80,7 +80,7 @@ class DefaultEventRoute(
 
         journalDao.insert(journal)
 
-        queue.put(journal)
+        messageQueue.put(journal)
     }
 
     fun handle(event: Event) {
@@ -99,7 +99,7 @@ class DefaultEventRoute(
 
         journals.forEach { journal ->
             journal.event = jsonConverter.toObject(journal.msg)
-            queue.put(journal)
+            messageQueue.put(journal)
             logger.info(journal.toString())
         }
 

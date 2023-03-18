@@ -42,8 +42,16 @@ class JournalDao(private val jdbc: NamedParameterJdbcTemplate) : RowMapper<Journ
         )
     }
 
+    fun findById(id: Long): Journal? {
+        return jdbc.queryForObject("select * from journal where id=:id", mapOf("id" to id), this)
+    }
+
     fun findAll(): List<Journal> {
         return jdbc.query("select * from journal", this)
+    }
+
+    fun findByUUID(uuid: String): Journal? {
+        return jdbc.queryForObject("select * from journal where uuid=:uuid", mapOf("uuid" to uuid), this)
     }
 
     fun findByState(state: Int): List<Journal> {
@@ -66,6 +74,10 @@ class JournalDao(private val jdbc: NamedParameterJdbcTemplate) : RowMapper<Journ
 
     fun updateStateById(id: Long, state: JournalState) {
         jdbc.update("update JOURNAL set STATE=:state where ID=:id", mapOf("id" to id, "state" to state.value))
+    }
+
+    fun updateStateByUUID(uuid: String, state: JournalState): Int {
+        return jdbc.update("update JOURNAL set STATE=:state where UUID=:uuid", mapOf("uuid" to uuid, "state" to state.value))
     }
 
 }

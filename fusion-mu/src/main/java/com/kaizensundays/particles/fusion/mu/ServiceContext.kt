@@ -6,6 +6,7 @@ import com.kaizensundays.particles.fusion.mu.dao.JournalDao
 import com.kaizensundays.particles.fusion.mu.messages.AddAirline
 import com.kaizensundays.particles.fusion.mu.messages.Event
 import com.kaizensundays.particles.fusion.mu.messages.FindFlight
+import com.kaizensundays.particles.fusion.mu.messages.Journal
 import org.apache.ignite.Ignite
 import org.apache.ignite.events.EventType
 import org.postgresql.ds.PGPoolingDataSource
@@ -17,6 +18,9 @@ import org.springframework.core.Ordered
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 import org.springframework.web.reactive.handler.SimpleUrlHandlerMapping
 import org.springframework.web.reactive.socket.server.support.WebSocketHandlerAdapter
+import java.util.*
+import java.util.concurrent.ArrayBlockingQueue
+import java.util.concurrent.BlockingQueue
 import javax.sql.DataSource
 
 /**
@@ -87,8 +91,14 @@ open class ServiceContext {
     }
 
     @Bean
-    open fun defaultEventRoute(journalH2Dao: JournalDao, journalManager: JournalManager, handlers: Map<Class<out Event>, Handler<Event>>): DefaultEventRoute {
-        return DefaultEventRoute(journalH2Dao, journalManager, handlers)
+    open fun messageQueue(): BlockingQueue<Journal> {
+        return ArrayBlockingQueue(1000)
+    }
+
+    @Bean
+    open fun defaultEventRoute(journalH2Dao: JournalDao, messageQueue: BlockingQueue<Journal>, journalManager: JournalManager, handlers: Map<Class<out Event>, Handler<Event>>): DefaultEventRoute {
+        journalManager.messageQueue = messageQueue
+        return DefaultEventRoute(journalH2Dao, messageQueue, journalManager, handlers)
     }
 
     @Bean
