@@ -4,7 +4,6 @@ import com.kaizensundays.particles.fusion.mu.dao.JournalDao
 import com.kaizensundays.particles.fusion.mu.messages.Event
 import com.kaizensundays.particles.fusion.mu.messages.JacksonObjectConverter
 import com.kaizensundays.particles.fusion.mu.messages.Journal
-import com.kaizensundays.particles.fusion.mu.messages.JournalState
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import java.text.SimpleDateFormat
@@ -71,22 +70,10 @@ class DefaultEventRoute(
         }
     }
 
-    private fun journal(event: Event) {
-
-        val msg = jsonConverter.fromObject(event)
-        logger.info(msg)
-
-        val journal = Journal(0, JournalState.ACCEPTED.value, df.format(Date()), UUID.randomUUID().toString(), msg, event)
-
-        journalDao.insert(journal)
-
-        messageQueue.put(journal)
-    }
-
     fun handle(event: Event) {
         logger.info("" + event)
 
-        journalExecutor.execute { journal(event) }
+        journalExecutor.execute { journalManager.accept(event) }
     }
 
     @PostConstruct

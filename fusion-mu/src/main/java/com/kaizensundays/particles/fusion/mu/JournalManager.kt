@@ -7,6 +7,8 @@ import com.kaizensundays.particles.fusion.mu.messages.Journal
 import com.kaizensundays.particles.fusion.mu.messages.JournalState
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+import java.text.SimpleDateFormat
+import java.util.*
 import java.util.concurrent.BlockingQueue
 
 /**
@@ -20,7 +22,21 @@ class JournalManager(private val journalDao: JournalDao) {
 
     private val jsonConverter = JacksonObjectConverter<Event>()
 
+    private val df = SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS z")
+
     lateinit var messageQueue: BlockingQueue<Journal>
+
+    fun accept(event: Event) {
+
+        val msg = jsonConverter.fromObject(event)
+        logger.info(msg)
+
+        val journal = Journal(0, JournalState.ACCEPTED.value, df.format(Date()), UUID.randomUUID().toString(), msg, event)
+
+        journalDao.insert(journal)
+
+        messageQueue.put(journal)
+    }
 
     fun load() {
 
