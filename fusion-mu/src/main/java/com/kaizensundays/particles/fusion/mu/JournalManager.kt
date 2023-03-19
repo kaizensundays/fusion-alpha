@@ -10,6 +10,7 @@ import com.kaizensundays.particles.fusion.mu.messages.JournalState
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import java.text.SimpleDateFormat
+import java.time.Duration
 import java.util.*
 import java.util.concurrent.BlockingQueue
 
@@ -56,6 +57,14 @@ class JournalManager(private val journalDao: JournalDao) {
         }
 
         logger.info("Loaded ${journals.size} accepted events")
+
+        val ttl = Duration.ofHours(1)
+
+        val time = Date(System.currentTimeMillis() - ttl.toMillis())
+
+        val records = journalDao.findBefore(time, JournalState.COMMITTED)
+
+        logger.info("Found ${records.size} committed events older that $ttl")
     }
 
     fun commit(journal: Journal): Int {
