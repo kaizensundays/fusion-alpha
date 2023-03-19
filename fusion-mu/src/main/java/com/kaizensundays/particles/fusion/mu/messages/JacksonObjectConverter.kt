@@ -1,5 +1,6 @@
 package com.kaizensundays.particles.fusion.mu.messages
 
+import com.fasterxml.jackson.core.JsonFactory
 import com.fasterxml.jackson.core.type.TypeReference
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.SerializationFeature
@@ -14,10 +15,11 @@ import java.util.*
  *
  * @author Sergey Chuykov
  */
-class JacksonObjectConverter<T : JacksonSerializable> : ObjectConverter<T, String> {
+class JacksonObjectConverter<T : JacksonSerializable>(
+    private val jackson: ObjectMapper = ObjectMapper().registerModule(KotlinModule())
+) : ObjectConverter<T, String> {
 
-    private val jackson = ObjectMapper()
-            .registerModule(KotlinModule())
+    constructor(factory: JsonFactory) : this(ObjectMapper(factory).registerModule(KotlinModule()))
 
     init {
         jackson.registerModule(SimpleModule()

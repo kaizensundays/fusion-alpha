@@ -1,5 +1,6 @@
 package com.kaizensundays.particles.fusion.mu
 
+import com.fasterxml.jackson.dataformat.yaml.YAMLFactory
 import com.kaizensundays.particles.fusion.mu.dao.JournalDao
 import com.kaizensundays.particles.fusion.mu.messages.Event
 import com.kaizensundays.particles.fusion.mu.messages.JacksonObjectConverter
@@ -21,6 +22,7 @@ class JournalManager(private val journalDao: JournalDao) {
     private val logger: Logger = LoggerFactory.getLogger(javaClass)
 
     private val jsonConverter = JacksonObjectConverter<Event>()
+    private val yamlConverter = JacksonObjectConverter<Event>(YAMLFactory())
 
     private val df = SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS z")
 
@@ -61,10 +63,12 @@ class JournalManager(private val journalDao: JournalDao) {
 
     fun findAll(): String {
 
-        val journal = journalDao.findAll()
+        val journals = journalDao.findAll()
+
+        journals.forEach { journal -> journal.event = jsonConverter.toObject(journal.msg) }
 
         return try {
-            jsonConverter.fromObjects(journal)
+            yamlConverter.fromObjects(journals)
         } catch (e: Exception) {
             logger.error(e.message, e)
             e.stackTraceToString()
