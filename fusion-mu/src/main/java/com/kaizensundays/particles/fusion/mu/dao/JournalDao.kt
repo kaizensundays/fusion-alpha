@@ -2,6 +2,7 @@ package com.kaizensundays.particles.fusion.mu.dao
 
 import com.kaizensundays.particles.fusion.mu.messages.Journal
 import com.kaizensundays.particles.fusion.mu.messages.JournalState
+import org.h2.jdbc.JdbcResultSet
 import org.springframework.jdbc.core.RowMapper
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 import java.sql.ResultSet
@@ -14,10 +15,11 @@ import java.sql.ResultSet
 class JournalDao(private val jdbc: NamedParameterJdbcTemplate) : RowMapper<Journal> {
 
     override fun mapRow(rs: ResultSet, rowNum: Int): Journal {
+        val h2rs = rs as JdbcResultSet
         return Journal(
             rs.getLong("id"),
             rs.getInt("state"),
-            rs.getString("time"),
+            h2rs.getTimestamp("time"),
             rs.getString("uuid"),
             rs.getString("msg")
         )
@@ -34,7 +36,7 @@ class JournalDao(private val jdbc: NamedParameterJdbcTemplate) : RowMapper<Journ
         return jdbc.update(
             "CREATE TABLE IF NOT EXISTS journal (" +
                     " ID BIGINT auto_increment PRIMARY KEY, STATE INT," +
-                    " TIME VARCHAR(32)," +
+                    " TIME TIMESTAMP WITH TIME ZONE," +
                     " UUID VARCHAR(36)," +
                     " MSG VARCHAR(1000)" +
                     ")",

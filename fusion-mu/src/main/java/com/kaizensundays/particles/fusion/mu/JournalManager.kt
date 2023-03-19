@@ -33,7 +33,7 @@ class JournalManager(private val journalDao: JournalDao) {
         val msg = jsonConverter.fromObject(event)
         logger.info(msg)
 
-        val journal = Journal(0, JournalState.ACCEPTED.value, df.format(Date()), UUID.randomUUID().toString(), msg, event)
+        val journal = Journal(0, JournalState.ACCEPTED.value, Date(), UUID.randomUUID().toString(), msg, event)
 
         journalDao.insert(journal)
 

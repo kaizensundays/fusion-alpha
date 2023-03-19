@@ -10,8 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.junit4.SpringRunner
-import java.time.LocalDateTime
-import java.time.ZoneId
 import java.util.*
 import kotlin.test.assertEquals
 
@@ -30,7 +28,7 @@ class JournalDaoTest {
 
     private fun journal(msg: String): Journal {
         return Journal(
-            0, JournalState.ACCEPTED.value, LocalDateTime.now(ZoneId.of("America/New_York")).toString(),
+            0, JournalState.ACCEPTED.value, Date(),
             UUID.randomUUID().toString(), msg
         )
     }
@@ -60,5 +58,14 @@ class JournalDaoTest {
 
         assertEquals(journals.size, list.size)
     }
+
+/*
+    @Test
+    fun findAll() {
+
+        dao.findAll()
+
+    }
+*/
 
 }
