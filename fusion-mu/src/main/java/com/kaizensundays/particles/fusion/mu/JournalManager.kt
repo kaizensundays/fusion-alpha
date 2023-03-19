@@ -61,7 +61,7 @@ class JournalManager(private val journalDao: JournalDao) {
         return journalDao.updateStateByUUID(journal.uuid, JournalState.COMMITTED)
     }
 
-    fun findAll(): String {
+    fun findAll(): List<Journal> {
 
         var journals = journalDao.findAll()
 
@@ -70,12 +70,7 @@ class JournalManager(private val journalDao: JournalDao) {
             Journal(journal.id, journal.state, journal.time, journal.uuid, "", event)
         }
 
-        return try {
-            yamlConverter.fromObjects(journals)
-        } catch (e: Exception) {
-            logger.error(e.message, e)
-            e.stackTraceToString()
-        }
+        return journals
     }
 
 }

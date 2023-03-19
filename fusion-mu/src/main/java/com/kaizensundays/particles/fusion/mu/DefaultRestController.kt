@@ -1,6 +1,7 @@
 package com.kaizensundays.particles.fusion.mu
 
 import com.kaizensundays.particles.fusion.mu.messages.AddAirline
+import com.kaizensundays.particles.fusion.mu.messages.Journal
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.web.bind.annotation.GetMapping
@@ -39,7 +40,7 @@ class DefaultRestController(
     }
 
     @GetMapping("/journal/findAll")
-    fun journalFindAll(): String {
+    fun journalFindAll(): List<Journal> {
 
         return journalManager.findAll()
     }
