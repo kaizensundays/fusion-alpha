@@ -6,6 +6,7 @@ import org.h2.jdbc.JdbcResultSet
 import org.springframework.jdbc.core.RowMapper
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 import java.sql.ResultSet
+import java.util.*
 
 /**
  * Created: Saturday 3/4/2023, 11:56 AM Eastern Time
@@ -58,6 +59,11 @@ class JournalDao(private val jdbc: NamedParameterJdbcTemplate) : RowMapper<Journ
 
     fun findByState(state: Int): List<Journal> {
         return jdbc.query("select * from journal where state=:state order by id", mapOf("state" to state), this)
+    }
+
+    fun findBefore(time: Date, state: JournalState): List<Journal> {
+        val params = mapOf("time" to time, "state" to state.value)
+        return jdbc.query("select * from journal where time < :time and state=:state", params, this)
     }
 
     fun truncate(): Int {

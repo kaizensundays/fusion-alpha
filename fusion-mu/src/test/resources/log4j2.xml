@@ -6,8 +6,8 @@
         </Console>
     </Appenders>
     <Loggers>
-        <Logger name="org.eclipse.jetty" level="INFO"/>
         <Logger name="org.springframework" level="INFO"/>
+        <Logger name="org.springframework.jdbc" level="TRACE"/>
         <Logger name="org.apache.ignite" level="INFO"/>
 
         <Logger name="com.kaizensundays" level="ALL"/>
