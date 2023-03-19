@@ -63,9 +63,12 @@ class JournalManager(private val journalDao: JournalDao) {
 
     fun findAll(): String {
 
-        val journals = journalDao.findAll()
+        var journals = journalDao.findAll()
 
-        journals.forEach { journal -> journal.event = jsonConverter.toObject(journal.msg) }
+        journals = journals.map { journal ->
+            val event = jsonConverter.toObject(journal.msg)
+            Journal(journal.id, journal.state, journal.time, journal.uuid, "", event)
+        }
 
         return try {
             yamlConverter.fromObjects(journals)

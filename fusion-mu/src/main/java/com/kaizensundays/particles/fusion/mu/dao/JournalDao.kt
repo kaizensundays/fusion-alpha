@@ -47,7 +47,7 @@ class JournalDao(private val jdbc: NamedParameterJdbcTemplate) : RowMapper<Journ
     }
 
     fun findAll(): List<Journal> {
-        return jdbc.query("select * from journal", this)
+        return jdbc.query("select * from journal order by id desc", this)
     }
 
     fun findByUUID(uuid: String): Journal? {
