@@ -1,17 +1,15 @@
 package com.kaizensundays.particles.fusion.mu
 
 import com.kaizensundays.particles.fusion.mu.messages.AddAirline
-import com.kaizensundays.particles.fusion.mu.messages.Journal
+import com.kaizensundays.particles.fusion.mu.messages.JournalFormatted
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
-import org.springframework.http.MediaType
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.ResponseBody
 import org.springframework.web.bind.annotation.RestController
-import reactor.core.publisher.Flux
 
 /**
  * Created: Saturday 12/4/2021, 12:29 PM Eastern Time
@@ -41,8 +39,8 @@ class DefaultRestController(
         return "Ok"
     }
 
-    @GetMapping("/journal/findAll", produces = [MediaType.TEXT_EVENT_STREAM_VALUE])
-    fun journalFindAll(): List<Journal> {
+    @GetMapping("/journal/findAll")
+    fun journalFindAll(): List<JournalFormatted> {
 
         return journalManager.findAll()
     }

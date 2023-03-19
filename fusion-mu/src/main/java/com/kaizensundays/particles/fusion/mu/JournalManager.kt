@@ -5,6 +5,7 @@ import com.kaizensundays.particles.fusion.mu.dao.JournalDao
 import com.kaizensundays.particles.fusion.mu.messages.Event
 import com.kaizensundays.particles.fusion.mu.messages.JacksonObjectConverter
 import com.kaizensundays.particles.fusion.mu.messages.Journal
+import com.kaizensundays.particles.fusion.mu.messages.JournalFormatted
 import com.kaizensundays.particles.fusion.mu.messages.JournalState
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -61,16 +62,18 @@ class JournalManager(private val journalDao: JournalDao) {
         return journalDao.updateStateByUUID(journal.uuid, JournalState.COMMITTED)
     }
 
-    fun findAll(): List<Journal> {
+    fun findAll(): List<JournalFormatted> {
 
-        var journals = journalDao.findAll()
+        val df = SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS zzzz")
+        df.timeZone = TimeZone.getTimeZone("America/New_York")
 
-        journals = journals.map { journal ->
+        val journals = journalDao.findAll()
+
+        return journals.map { journal ->
             val event = jsonConverter.toObject(journal.msg)
-            Journal(journal.id, journal.state, journal.time, journal.uuid, journal.msg, event)
+            val time = df.format(journal.time)
+            JournalFormatted(journal.id, journal.state, time, journal.uuid, journal.msg, event)
         }
-
-        return journals
     }
 
 }
