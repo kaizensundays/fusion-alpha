@@ -67,7 +67,7 @@ class JournalManager(private val journalDao: JournalDao) {
 
         journals = journals.map { journal ->
             val event = jsonConverter.toObject(journal.msg)
-            Journal(journal.id, journal.state, journal.time, journal.uuid, "", event)
+            Journal(journal.id, journal.state, journal.time, journal.uuid, journal.msg, event)
         }
 
         return journals
