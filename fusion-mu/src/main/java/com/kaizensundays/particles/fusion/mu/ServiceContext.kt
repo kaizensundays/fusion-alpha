@@ -18,7 +18,6 @@ import org.springframework.core.Ordered
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 import org.springframework.web.reactive.handler.SimpleUrlHandlerMapping
 import org.springframework.web.reactive.socket.server.support.WebSocketHandlerAdapter
-import java.util.*
 import java.util.concurrent.ArrayBlockingQueue
 import java.util.concurrent.BlockingQueue
 import javax.sql.DataSource
@@ -111,8 +110,8 @@ open class ServiceContext {
     }
 
     @Bean
-    open fun defaultRestController(defaultEventRoute: DefaultEventRoute): DefaultRestController {
-        return DefaultRestController(defaultEventRoute)
+    open fun defaultRestController(defaultEventRoute: DefaultEventRoute, journalManager: JournalManager): DefaultRestController {
+        return DefaultRestController(defaultEventRoute, journalManager)
     }
 
 }

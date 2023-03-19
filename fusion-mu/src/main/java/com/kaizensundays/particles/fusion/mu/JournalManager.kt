@@ -59,4 +59,16 @@ class JournalManager(private val journalDao: JournalDao) {
         return journalDao.updateStateByUUID(journal.uuid, JournalState.COMMITTED)
     }
 
+    fun findAll(): String {
+
+        val journal = journalDao.findAll()
+
+        return try {
+            jsonConverter.fromObjects(journal)
+        } catch (e: Exception) {
+            logger.error(e.message, e)
+            e.stackTraceToString()
+        }
+    }
+
 }

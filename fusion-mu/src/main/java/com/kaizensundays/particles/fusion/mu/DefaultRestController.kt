@@ -3,6 +3,7 @@ package com.kaizensundays.particles.fusion.mu
 import com.kaizensundays.particles.fusion.mu.messages.AddAirline
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
@@ -16,7 +17,8 @@ import org.springframework.web.bind.annotation.RestController
  */
 @RestController
 class DefaultRestController(
-    private val eventRoute: DefaultEventRoute
+    private val eventRoute: DefaultEventRoute,
+    private val journalManager: JournalManager
 ) {
 
     private val logger: Logger = LoggerFactory.getLogger(javaClass)
@@ -34,6 +36,12 @@ class DefaultRestController(
         eventRoute.handle(addAirline)
 
         return "Ok"
+    }
+
+    @GetMapping("/journal/findAll")
+    fun journalFindAll(): String {
+
+        return journalManager.findAll()
     }
 
 }
