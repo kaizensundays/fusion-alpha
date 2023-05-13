@@ -313,4 +313,17 @@
         </plugins>
     </build>
 
+    <distributionManagement>
+        <repository>
+            <id>nexus</id>
+            <name>dev-releases</name>
+            <url>${env.DEV_REPO}/artifactory/libs-release-local</url>
+        </repository>
+        <snapshotRepository>
+            <id>nexus.snapshots</id>
+            <name>dev-snapshots</name>
+            <url>${env.DEV_REPO}/artifactory/libs-snapshot-local</url>
+        </snapshotRepository>
+    </distributionManagement>
+
 </project>
