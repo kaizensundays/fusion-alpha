@@ -1,7 +1,9 @@
 
 .idea
+.tests
 
 target
+h2
 ignite
 
 *.iml
