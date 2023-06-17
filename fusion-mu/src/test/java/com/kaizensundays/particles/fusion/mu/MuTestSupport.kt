@@ -23,4 +23,6 @@ abstract class MuTestSupport {
         }
     }
 
+    fun unixNL(s: String) = s.replace("\r\n", "\n")
+
 }

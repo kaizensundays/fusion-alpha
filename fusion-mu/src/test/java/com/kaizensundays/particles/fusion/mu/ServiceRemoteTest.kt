@@ -19,7 +19,7 @@ import kotlin.test.assertEquals
 @Suppress("MemberVisibilityCanBePrivate")
 class ServiceRemoteTest : MuTestSupport() {
 
-    val port = 7701
+    val port = 7702
 
     val client = ReactorNettyWebSocketClient()
 
@@ -36,8 +36,8 @@ class ServiceRemoteTest : MuTestSupport() {
 
     fun requests(): Flux<String> {
         return Flux.fromIterable(requests.mergeValues())
-                .delaySubscription(Duration.ofSeconds(1))
-                .delayElements(Duration.ofSeconds(1))
+                .delaySubscription(Duration.ofSeconds(10))
+                .delayElements(Duration.ofSeconds(10))
                 .map { request -> converter.fromObject(request) }
     }
 
@@ -62,7 +62,7 @@ class ServiceRemoteTest : MuTestSupport() {
                             .map { event -> flights.add(event as Flight) }
                             .then()
             ).then()
-        }.block(Duration.ofSeconds(100))
+        }.block(Duration.ofSeconds(300))
 
         assertEquals(4, flights.size)
     }

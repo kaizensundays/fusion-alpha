@@ -2,9 +2,11 @@ package com.kaizensundays.particles.fusion.mu
 
 import com.kaizensundays.particles.fusion.mu.dao.FindFlightDao
 import com.kaizensundays.particles.fusion.mu.messages.FindFlight
+import org.apache.ignite.Ignite
 import org.apache.ignite.cache.CacheAtomicityMode
 import org.apache.ignite.configuration.CacheConfiguration
 import org.apache.ignite.configuration.IgniteConfiguration
+import org.apache.ignite.configuration.TopologyValidator
 import org.apache.ignite.events.EventType
 import org.apache.ignite.logger.slf4j.Slf4jLogger
 import org.apache.ignite.spi.discovery.tcp.TcpDiscoverySpi
@@ -27,7 +29,12 @@ open class IgniteContext {
     open fun findFlightCacheStore(dao: FindFlightDao) = FindFlightCacheStore(dao)
 
     @Bean
-    open fun ignite(findFlightCacheStore: FindFlightCacheStore): IgniteFactoryBean {
+    open fun topologyValidator(): TopologyValidator {
+        return DefaultTopologyValidator()
+    }
+
+    @Bean
+    open fun ignite(findFlightCacheStore: FindFlightCacheStore, topologyValidator: TopologyValidator): IgniteFactoryBean {
 
         val configuration = IgniteConfiguration()
             .setGridLogger(Slf4jLogger())
@@ -40,6 +47,7 @@ open class IgniteContext {
             .setCacheConfiguration(
                 CacheConfiguration<String, FindFlight>()
                     .setName(CacheName.Requests)
+                    .setTopologyValidator(topologyValidator)
                     .setAtomicityMode(CacheAtomicityMode.TRANSACTIONAL)
                     .setExpiryPolicyFactory(CreatedExpiryPolicy.factoryOf(Duration(TimeUnit.DAYS, 1)))
                     .setCacheStoreFactory(findFlightCacheStore.factory())
@@ -50,7 +58,7 @@ open class IgniteContext {
                     .setExpiryPolicyFactory(CreatedExpiryPolicy.factoryOf(Duration(TimeUnit.DAYS, 1))),
             )
             .setIncludeEventTypes(
-                EventType.EVT_CACHE_OBJECT_PUT
+                *EventType.EVTS_DISCOVERY
             )
 
         return IgniteFactoryBean(configuration)
