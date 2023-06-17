@@ -10,16 +10,19 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <java.version>1.8</java.version>
-        <kotlin.version>1.5.31</kotlin.version>
+        <kotlin.version>1.6.21</kotlin.version>
         <slf4j.version>1.7.25</slf4j.version>
         <log4j.version>2.17.2</log4j.version>
         <jetty.version>9.4.34.v20201102</jetty.version>
-        <spring.version>5.2.22.RELEASE</spring.version>
-        <spring.boot.version>2.5.13</spring.boot.version>
-        <jackson.version>2.12.6</jackson.version>
-        <jackson.databind.version>2.12.6.1</jackson.databind.version>
+        <spring.version>5.3.12</spring.version>
+        <spring.boot.version>2.5.6</spring.boot.version>
+        <!--
+                <spring.boot.version>2.2.13.RELEASE</spring.boot.version>
+        -->
+        <jackson.version>2.13.5</jackson.version>
+        <jackson.databind.version>2.13.5</jackson.databind.version>
         <jcache.version>1.1.0</jcache.version>
-        <ignite.version>2.11.0</ignite.version>
+        <ignite.version>2.14.0</ignite.version>
     </properties>
 
     <modules>
@@ -117,11 +120,13 @@
             </dependency>
 
             <!-- Reactor -->
-            <dependency>
-                <groupId>io.projectreactor</groupId>
-                <artifactId>reactor-core</artifactId>
-                <version>3.3.12.RELEASE</version>
-            </dependency>
+            <!--
+                        <dependency>
+                            <groupId>io.projectreactor</groupId>
+                            <artifactId>reactor-core</artifactId>
+                            <version>3.3.12.RELEASE</version>
+                        </dependency>
+            -->
 
             <!-- Gson -->
             <dependency>
@@ -153,6 +158,11 @@
                 <artifactId>jackson-module-kotlin</artifactId>
                 <version>${jackson.version}</version>
             </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.dataformat</groupId>
+            <artifactId>jackson-dataformat-yaml</artifactId>
+            <version>${jackson.version}</version>
+        </dependency>
 
             <!-- JCache -->
             <dependency>
@@ -231,6 +241,10 @@
             <groupId>org.jetbrains.kotlin</groupId>
             <artifactId>kotlin-test-junit</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.dataformat</groupId>
+            <artifactId>jackson-dataformat-yaml</artifactId>
+        </dependency>
 
     </dependencies>
 
@@ -298,5 +312,18 @@
             </plugin>
         </plugins>
     </build>
+
+    <distributionManagement>
+        <repository>
+            <id>nexus</id>
+            <name>dev-releases</name>
+            <url>${env.DEV_REPO}/artifactory/libs-release-local</url>
+        </repository>
+        <snapshotRepository>
+            <id>nexus.snapshots</id>
+            <name>dev-snapshots</name>
+            <url>${env.DEV_REPO}/artifactory/libs-snapshot-local</url>
+        </snapshotRepository>
+    </distributionManagement>
 
 </project>

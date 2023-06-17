@@ -4,7 +4,6 @@ import com.kaizensundays.particles.fusion.mu.messages.Event
 import com.kaizensundays.particles.fusion.mu.messages.FindFlight
 import com.kaizensundays.particles.fusion.mu.messages.Flight
 import com.kaizensundays.particles.fusion.mu.messages.JacksonObjectConverter
-import org.springframework.web.reactive.socket.WebSocketHandler
 import org.springframework.web.reactive.socket.WebSocketSession
 import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
@@ -15,7 +14,9 @@ import reactor.core.scheduler.Schedulers
  *
  * @author Sergey Chuykov
  */
-class FrontEndWebSocketHandler(private val handler: FindFlightHandler) : WebSocketHandler {
+class FrontEndWebSocketHandler(
+    private val handler: FindFlightHandler
+) : NodeStateAwareWebSocketHandler() {
 
     private val converter = JacksonObjectConverter<Event>()
 
@@ -32,9 +33,10 @@ class FrontEndWebSocketHandler(private val handler: FindFlightHandler) : WebSock
     override fun handle(session: WebSocketSession): Mono<Void> {
 
         val subscriber = session.receive()
+            .doOnSubscribe { subscription -> addSession(session, subscription) }
             .map { msg -> msg.payloadAsText }
             .log()
-            .publishOn(Schedulers.elastic())
+            .publishOn(Schedulers.boundedElastic())
             .map { json -> converter.toObject(json) }
             .flatMap { event -> handleEvent(event) }
             .map { flight -> converter.fromObject(flight) }
@@ -43,6 +45,7 @@ class FrontEndWebSocketHandler(private val handler: FindFlightHandler) : WebSock
 
 
         return session.send(subscriber)
+            .doOnTerminate { removeSession(session) }
     }
 
 }

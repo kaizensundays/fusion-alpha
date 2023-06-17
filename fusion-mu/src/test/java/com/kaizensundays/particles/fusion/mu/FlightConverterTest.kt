@@ -32,7 +32,11 @@ class FlightConverterTest : MuTestSupport() {
 
         wire = wire.adjustFormat()
 
-        val json = read("/flights.json")
+        wire = unixNL(wire)
+
+        var json = read("/flights.json")
+
+        json = unixNL(json)
 
         assertEquals(json, wire)
 
