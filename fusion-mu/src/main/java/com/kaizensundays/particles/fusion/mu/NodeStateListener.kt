@@ -5,7 +5,7 @@ package com.kaizensundays.particles.fusion.mu
  *
  * @author Sergey Chuykov
  */
-interface NodeStateListener {
+fun interface NodeStateListener {
 
     fun onStateChange(active: Boolean)
 
