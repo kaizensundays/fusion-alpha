@@ -86,6 +86,7 @@ open class ServiceContext {
             AddAirline::class.java to AddAirlineHandler(),
             FindFlight::class.java to findFlightHandler
         )
+        @Suppress("UNCHECKED_CAST")
         return map as Map<Class<out Event>, Handler<Event>>
     }
 
