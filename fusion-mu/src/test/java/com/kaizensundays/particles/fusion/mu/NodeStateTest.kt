@@ -49,7 +49,7 @@ class NodeStateTest {
         assertTrue(state.isActive(listOf(node(2, 2))))
 
         // quorum values are not equals
-        assertThrows<IllegalStateException> { state.isActive(listOf(node(1, 2), node(1, 1)))}
+        assertThrows<IllegalArgumentException> { state.isActive(listOf(node(1, 2), node(1, 1)))}
     }
 
 }
