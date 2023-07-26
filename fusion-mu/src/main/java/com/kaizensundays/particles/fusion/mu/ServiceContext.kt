@@ -10,6 +10,7 @@ import com.kaizensundays.particles.fusion.mu.messages.Journal
 import org.apache.ignite.Ignite
 import org.apache.ignite.events.EventType
 import org.postgresql.ds.PGPoolingDataSource
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -32,13 +33,19 @@ import javax.sql.DataSource
 @Import(IgniteContext::class, JournalContext::class)
 open class ServiceContext {
 
+    @Value("\${pg.user}")
+    var pgUser = ""
+
+    @Value("\${pg.password}")
+    var pgPassword = ""
+
     @Bean
     open fun dataSource(): DataSource {
         val ds = PGPoolingDataSource()
         ds.serverName = "PgSql"
         ds.portNumber = 30432
-        ds.user = "postgres"
-        ds.password = "postgres"
+        ds.user = pgUser
+        ds.password = pgPassword
         return ds
     }
 
