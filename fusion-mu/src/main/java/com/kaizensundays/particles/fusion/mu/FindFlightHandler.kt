@@ -35,7 +35,7 @@ class FindFlightHandler(private val cache: IgniteCache<String, FindFlight>) : Ha
 
     fun getFlights(events: Flux<FindFlight>): Flux<Flight> {
 
-        return events.subscribeOn(Schedulers.elastic())
+        return events.subscribeOn(Schedulers.boundedElastic())
             .log()
             .map { event -> event.from + '-' + event.to }
             .doOnNext { key -> logger.info("> $key") }

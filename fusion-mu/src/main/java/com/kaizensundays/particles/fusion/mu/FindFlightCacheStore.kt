@@ -26,6 +26,7 @@ class FindFlightCacheStore(@Transient val dao: FindFlightDao) : AbstractCacheSto
     }
 
     override fun delete(key: Any?) {
+        //
     }
 
 }

@@ -2,7 +2,6 @@ package com.kaizensundays.particles.fusion.mu
 
 import com.kaizensundays.particles.fusion.mu.dao.FindFlightDao
 import com.kaizensundays.particles.fusion.mu.messages.FindFlight
-import org.apache.ignite.Ignite
 import org.apache.ignite.cache.CacheAtomicityMode
 import org.apache.ignite.configuration.CacheConfiguration
 import org.apache.ignite.configuration.IgniteConfiguration

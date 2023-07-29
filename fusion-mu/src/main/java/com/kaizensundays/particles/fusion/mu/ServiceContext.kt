@@ -7,9 +7,10 @@ import com.kaizensundays.particles.fusion.mu.messages.AddAirline
 import com.kaizensundays.particles.fusion.mu.messages.Event
 import com.kaizensundays.particles.fusion.mu.messages.FindFlight
 import com.kaizensundays.particles.fusion.mu.messages.Journal
+import com.zaxxer.hikari.HikariDataSource
 import org.apache.ignite.Ignite
 import org.apache.ignite.events.EventType
-import org.postgresql.ds.PGPoolingDataSource
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -32,16 +33,24 @@ import javax.sql.DataSource
 @Import(IgniteContext::class, JournalContext::class)
 open class ServiceContext {
 
+    @Value("\${pg.url}")
+    var pgUrl = ""
+
+    @Value("\${pg.user}")
+    var pgUser = ""
+
+    @Value("\${pg.password}")
+    var pgPassword = ""
+
     @Bean
     open fun dataSource(): DataSource {
-        val ds = PGPoolingDataSource()
-        ds.serverName = "PgSql"
-        ds.portNumber = 30432
-        ds.user = "postgres"
-        ds.password = "postgres"
+        val ds = HikariDataSource()
+        ds.jdbcUrl = pgUrl
+        ds.username = pgUser
+        ds.password = pgPassword
+        ds.driverClassName = "org.postgresql.Driver"
         return ds
     }
-
 
     @Bean
     open fun jdbc(dataSource: DataSource) = NamedParameterJdbcTemplate(dataSource)
@@ -86,6 +95,7 @@ open class ServiceContext {
             AddAirline::class.java to AddAirlineHandler(),
             FindFlight::class.java to findFlightHandler
         )
+        @Suppress("UNCHECKED_CAST")
         return map as Map<Class<out Event>, Handler<Event>>
     }
 
