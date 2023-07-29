@@ -30,6 +30,7 @@ class FrontEndWebSocketHandler(
         }
     }
 
+    @SuppressWarnings("kotlin:S6508") // "Unit" should be used instead of "Void"
     override fun handle(session: WebSocketSession): Mono<Void> {
 
         val subscriber = session.receive()

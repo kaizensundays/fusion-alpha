@@ -7,7 +7,7 @@ import com.kaizensundays.particles.fusion.mu.messages.Event
  *
  * @author Sergey Chuykov
  */
-interface Handler<E : Event> {
+fun interface Handler<E : Event> {
 
     fun handle(event: E)
 

@@ -53,9 +53,7 @@ class NodeState(private val ignite: Ignite) : IgnitePredicate<Event>, NodeStateL
 
         val set = nodes.map { node -> quorum(node) }.toSet()
 
-        if (set.size != 1) {
-            throw IllegalStateException("Configuration error")
-        }
+        require(set.size == 1) { "Configuration error" }
 
         return set.first()
     }

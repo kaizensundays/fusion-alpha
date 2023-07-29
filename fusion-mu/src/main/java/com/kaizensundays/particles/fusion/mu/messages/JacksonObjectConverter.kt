@@ -6,7 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.SerializationFeature
 import com.fasterxml.jackson.databind.module.SimpleModule
 import com.fasterxml.jackson.databind.util.StdDateFormat
-import com.fasterxml.jackson.module.kotlin.KotlinModule
+import com.fasterxml.jackson.module.kotlin.registerKotlinModule
 import java.time.LocalDate
 import java.util.*
 
@@ -16,21 +16,22 @@ import java.util.*
  * @author Sergey Chuykov
  */
 class JacksonObjectConverter<T : JacksonSerializable>(
-    private val jackson: ObjectMapper = ObjectMapper().registerModule(KotlinModule())
+    private val jackson: ObjectMapper = ObjectMapper().registerKotlinModule()
 ) : ObjectConverter<T, String> {
 
-    constructor(factory: JsonFactory) : this(ObjectMapper(factory).registerModule(KotlinModule()))
+    constructor(factory: JsonFactory) : this(ObjectMapper(factory).registerKotlinModule())
 
     init {
-        jackson.registerModule(SimpleModule()
+        jackson.registerModule(
+            SimpleModule()
                 .addSerializer(LocalDate::class.java, LocalDateSerializer())
                 .addDeserializer(LocalDate::class.java, LocalDateDeserializer())
         )
         jackson.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
         jackson.dateFormat = StdDateFormat()
-                .withTimeZone(TimeZone.getTimeZone("UTC"))
-                .withLocale(Locale.US)
-                .withColonInTimeZone(true)
+            .withTimeZone(TimeZone.getTimeZone("UTC"))
+            .withLocale(Locale.US)
+            .withColonInTimeZone(true)
     }
 
     override fun fromObject(obj: T): String {
