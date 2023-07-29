@@ -55,6 +55,13 @@
             <version>42.3.8</version>
         </dependency>
 
+        <!-- HikariCP -->
+        <dependency>
+            <groupId>com.zaxxer</groupId>
+            <artifactId>HikariCP</artifactId>
+            <version>3.4.5</version>
+        </dependency>
+
         <!-- JCache -->
         <dependency>
             <groupId>javax.cache</groupId>
