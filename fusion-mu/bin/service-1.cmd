@@ -1,5 +1,11 @@
+@echo off
 
 set IGNITE_UPDATE_NOTIFIER=false
+
+set IGNITE_WORK_DIR=%cd%\ignite\node1
+
+echo "IGNITE_WORK_DIR=%IGNITE_WORK_DIR%"
+
 
 start "Node" java -Xmx256m ^
 	-Dlogging.config=log4j2-1.xml ^
