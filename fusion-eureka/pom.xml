@@ -30,6 +30,24 @@
 
     <profiles>
         <profile>
+            <id>java11</id>
+            <activation>
+                <jdk>11</jdk>
+            </activation>
+            <dependencies>
+                <dependency>
+                    <groupId>jakarta.xml.bind</groupId>
+                    <artifactId>jakarta.xml.bind-api</artifactId>
+                    <version>3.0.1</version>
+                </dependency>
+                <dependency>
+                    <groupId>com.sun.xml.bind</groupId>
+                    <artifactId>jaxb-impl</artifactId>
+                    <version>3.0.1</version>
+                </dependency>
+            </dependencies>
+        </profile>
+        <profile>
             <id>test</id>
             <build>
                 <plugins>
