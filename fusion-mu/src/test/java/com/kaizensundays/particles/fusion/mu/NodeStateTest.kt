@@ -1,9 +1,10 @@
 package com.kaizensundays.particles.fusion.mu
 
+//import org.junit.jupiter.api.assertThrows
 import org.apache.ignite.Ignite
 import org.apache.ignite.spi.discovery.tcp.internal.TcpDiscoveryNode
+import org.junit.Assert.assertThrows
 import org.junit.Test
-import org.junit.jupiter.api.assertThrows
 import org.mockito.kotlin.mock
 import java.util.*
 import kotlin.test.assertFalse
@@ -48,8 +49,10 @@ class NodeStateTest {
         assertTrue(state.isActive(listOf(node(2, 2), node(1, 2))))
         assertTrue(state.isActive(listOf(node(2, 2))))
 
-        // quorum values are not equals
-        assertThrows<IllegalArgumentException> { state.isActive(listOf(node(1, 2), node(1, 1)))}
+        // quorum values are not equal
+        assertThrows(IllegalArgumentException::class.java) {
+            state.isActive(listOf(node(1, 2), node(1, 1)))
+        }
     }
 
 }
