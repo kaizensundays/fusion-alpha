@@ -20,6 +20,7 @@
         <jetty.version>9.4.34.v20201102</jetty.version>
         <spring.version>5.2.12.RELEASE</spring.version>
         <spring-boot.version>2.2.13.RELEASE</spring-boot.version>
+        <spring-cloud.version>Hoxton.RELEASE</spring-cloud.version>
         <jackson.version>2.13.5</jackson.version>
         <jackson.databind.version>2.13.5</jackson.databind.version>
         <jcache.version>1.1.0</jcache.version>
@@ -107,7 +108,7 @@
             <dependency>
                 <groupId>org.springframework.cloud</groupId>
                 <artifactId>spring-cloud-dependencies</artifactId>
-                <version>Hoxton.RELEASE</version>
+                <version>${spring-cloud.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
