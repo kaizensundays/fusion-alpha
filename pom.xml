@@ -14,12 +14,12 @@
         <sonar.host.url>https://sonarcloud.io</sonar.host.url>
 
         <java.version>11</java.version>
-        <kotlin.version>1.6.21</kotlin.version>
+        <kotlin.version>1.7.22</kotlin.version>
         <slf4j.version>1.7.25</slf4j.version>
         <log4j.version>2.17.2</log4j.version>
-        <jetty.version>9.4.34.v20201102</jetty.version>
-        <spring.version>5.2.12.RELEASE</spring.version>
-        <spring-boot.version>2.2.13.RELEASE</spring-boot.version>
+        <spring.version>5.3.31</spring.version>
+        <spring-boot.version>2.7.18</spring-boot.version>
+        <spring-cloud.version>2021.0.8</spring-cloud.version>
         <jackson.version>2.13.5</jackson.version>
         <jackson.databind.version>2.13.5</jackson.databind.version>
         <jcache.version>1.1.0</jcache.version>
@@ -107,7 +107,7 @@
             <dependency>
                 <groupId>org.springframework.cloud</groupId>
                 <artifactId>spring-cloud-dependencies</artifactId>
-                <version>Hoxton.RELEASE</version>
+                <version>${spring-cloud.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
@@ -341,9 +341,9 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-surefire-plugin</artifactId>
-                    <version>2.19.1</version>
+                    <version>2.22.2</version>
                     <configuration>
-                        <redirectTestOutputToFile>true</redirectTestOutputToFile>
+                        <redirectTestOutputToFile>false</redirectTestOutputToFile>
                         <skipTests>true</skipTests>
                     </configuration>
                 </plugin>
