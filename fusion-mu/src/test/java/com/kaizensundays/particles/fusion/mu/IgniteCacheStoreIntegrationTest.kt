@@ -22,8 +22,8 @@ import kotlin.test.assertNotNull
  *
  * @author Sergey Chuykov
  */
-@RunWith(SpringRunner::class)
 @ActiveProfiles("test")
+@RunWith(SpringRunner::class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE, classes = [ServiceContext::class])
 class IgniteCacheStoreIntegrationTest : MuTestSupport() {
 
