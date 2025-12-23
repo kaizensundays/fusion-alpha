@@ -4,13 +4,13 @@ import com.kaizensundays.flights.service.Flights.adjustFormat
 import com.kaizensundays.flights.service.Flights.flightTypeRef
 import com.kaizensundays.flights.service.Flights.read
 import com.kaizensundays.flights.service.messages.Flight
-import org.junit.Test
+import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
 
 /**
  * Created: Saturday 10/30/2021, 1:30 PM Eastern Time
  *
- * @author Sergey Chuykov
+ * @author Sergey Chuykov & Junie (gpt-5-2025-08-07)
  */
 class FlightConverterTest : MuTestSupport() {
 
