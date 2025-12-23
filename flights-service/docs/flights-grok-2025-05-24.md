@@ -184,7 +184,22 @@ Here’s how the entities interact, forming the backbone of the system:
 
 To visualize the relationships, a simplified Entity-Relationship Diagram (ERD) would look like this (in text form):
 
-Insert Mermaid Diagram Here
+```mermaid
+erDiagram
+    FLIGHT ||--o{ AIRLINE : operates
+    FLIGHT ||--|| AIRPORT : "departs from"
+    FLIGHT ||--|| AIRPORT : "arrives at"
+    FLIGHT ||--o{ SEAT : has
+    FLIGHT ||--o{ PRICE : has
+    FLIGHT ||--o{ BOOKING : has
+    USER ||--o{ BOOKING : makes
+    BOOKING ||--o{ PASSENGER : includes
+    BOOKING ||--|| PAYMENT : has
+    BOOKING ||--o{ ITINERARY : "belongs to"
+    USER ||--o{ ITINERARY : has
+    PROMOTION ||--o{ BOOKING : applied_to
+    SCHEDULE ||--o{ FLIGHT : defines
+```
 
 ## Additional Considerations
 
