@@ -50,6 +50,7 @@ Use the example below:
  - Use JUnit 5 by default;
  - Group JUnit 5 tests for each method using @Nested inner class;
  - When changing the code in a package run all tests in this package;
+ - Don't run *RemoteTest and *ContainerTest
 
 ## Front-end
  - use Spring WebFlux RouterFunctions to handle requests from the browser
