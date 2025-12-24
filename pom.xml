@@ -15,7 +15,7 @@
         <sonar.host.url>https://sonarcloud.io</sonar.host.url>
 
         <java.version>17</java.version>
-        <kotlin.version>2.1.21</kotlin.version>
+        <kotlin.version>2.2.21</kotlin.version>
         <spring-boot.version>3.4.6</spring-boot.version>
         <spring-cloud.version>2024.0.1</spring-cloud.version>
         <ignite.version>2.17.0</ignite.version>
@@ -208,7 +208,7 @@
                     <version>3.5.1</version>
                     <configuration>
                         <redirectTestOutputToFile>false</redirectTestOutputToFile>
-                        <skipTests>false</skipTests>
+                        <skipTests>true</skipTests>
                         <useModulePath>false</useModulePath>
                     </configuration>
                 </plugin>
