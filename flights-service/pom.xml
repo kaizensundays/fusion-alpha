@@ -120,7 +120,7 @@
             </properties>
         </profile>
         <profile>
-            <id>test</id>
+            <id>tests</id>
             <build>
                 <plugins>
                     <plugin>
