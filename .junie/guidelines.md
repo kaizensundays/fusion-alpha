@@ -49,9 +49,7 @@ Use the example below:
 ## Test
  - Use JUnit 5 by default;
  - Group JUnit 5 tests for each method using @Nested inner class;
- - When changing the code in packages com.kaizensundays.socketlab.reactor
-   and com.kaizensundays.socketlab.reactor.jvm
-   run all tests in these packages in the module 'socketlab-reactor-jvm';
+ - When changing the code in a package run all tests in this package;
 
 ## Front-end
  - use Spring WebFlux RouterFunctions to handle requests from the browser
