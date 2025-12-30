@@ -6,14 +6,15 @@
 When creating a new Kotlin or Java class,
 HTML or CSS file, add a header after imports
 with the actual file creation date and time.
-Replace $ACTIVE_MODEL with the currently active LLM model Junie is using.
+Replace $AGENT_NAME with the currently active agent name.
+Replace $MODEL_NAME with the currently active LLM model the agent is using.
 If a file is being modified, add or replace the model name.
 Use the example below:
 
 /**
  * Created: Sunday 11/02/2025, 10:51 AM Eastern Time
  *
- * @author Sergey Chuykov & Junie ($ACTIVE_MODEL)
+ * @author Sergey Chuykov & $AGENT_NAME ($MODEL_NAME)
  */
 
 ## Code: General
@@ -46,12 +47,13 @@ Use the example below:
 - Add detailed comments to all HTMX elements in the HTML files.
 - Add detailed comments to all CSS elements in the HTML and CSS files.
 
-## Test
+**## Test
  - Use JUnit 5 by default;
+ - Write a unit test for each <<control>> and <<boundary>> class that has any logic;
  - Group JUnit 5 tests for each method using @Nested inner class;
- - When changing the code in packages com.kaizensundays.socketlab.reactor
-   and com.kaizensundays.socketlab.reactor.jvm
-   run all tests in these packages in the module 'socketlab-reactor-jvm';
+ - When changing the code in a package, run all tests in this package;
+ - Run tests sequentially;
+ - Don't run *RemoteTest and *ContainerTest;
 
 ## Front-end
  - use Spring WebFlux RouterFunctions to handle requests from the browser
