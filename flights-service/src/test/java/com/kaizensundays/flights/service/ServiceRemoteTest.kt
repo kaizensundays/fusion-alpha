@@ -2,8 +2,8 @@ package com.kaizensundays.flights.service
 
 import com.kaizensundays.flights.service.messages.FindFlight
 import com.kaizensundays.flights.service.messages.Flight
-import org.junit.Before
-import org.junit.Test
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 import org.springframework.web.reactive.socket.client.ReactorNettyWebSocketClient
 import reactor.core.publisher.Flux
 import java.net.URI
@@ -25,7 +25,7 @@ class ServiceRemoteTest : MuTestSupport() {
 
     var requests = emptyMap<String, Array<FindFlight>>()
 
-    @Before
+    @BeforeEach
     fun before() {
         val json = Flights.read("/find-flights.json")
 

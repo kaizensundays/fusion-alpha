@@ -3,8 +3,8 @@ package com.kaizensundays.flights.service
 import com.kaizensundays.flights.service.messages.FindFlight
 import org.apache.ignite.Ignition
 import org.apache.ignite.configuration.ClientConfiguration
-import org.junit.Before
-import org.junit.Test
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 import reactor.core.publisher.Flux
 import java.time.Duration
 import java.util.*
@@ -13,13 +13,13 @@ import java.util.*
 /**
  * Created: Sunday 4/20/2025, 12:18 PM Eastern Time
  *
- * @author Sergey Chuykov
+ * @author Sergey Chuykov & Junie (gpt-5-2025-08-07)
  */
 class CacheClientRemoteTest : MuTestSupport() {
 
     var requests = emptyMap<String, Array<FindFlight>>()
 
-    @Before
+    @BeforeEach
     fun before() {
         val json = Flights.read("/find-flights.json")
 

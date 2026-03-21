@@ -4,13 +4,13 @@ import com.kaizensundays.flights.service.dao.FindFlightDao
 import com.kaizensundays.flights.service.dao.FindFlightLoader
 import com.kaizensundays.flights.service.messages.FindFlight
 import org.apache.ignite.Ignite
-import org.junit.Before
-import org.junit.Test
-import org.junit.runner.RunWith
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.test.context.ActiveProfiles
-import org.springframework.test.context.junit4.SpringRunner
+import org.springframework.test.context.junit.jupiter.SpringExtension
+import org.junit.jupiter.api.extension.ExtendWith
 import reactor.core.publisher.Flux
 import java.time.Duration
 import java.util.*
@@ -23,7 +23,7 @@ import kotlin.test.assertNotNull
  * @author Sergey Chuykov
  */
 @ActiveProfiles("test")
-@RunWith(SpringRunner::class)
+@ExtendWith(SpringExtension::class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE, classes = [ServiceContext::class])
 class IgniteCacheStoreIntegrationTest : MuTestSupport() {
 
@@ -41,7 +41,7 @@ class IgniteCacheStoreIntegrationTest : MuTestSupport() {
 
     var requests = emptyMap<String, Array<FindFlight>>()
 
-    @Before
+    @BeforeEach
     fun before() {
 
         val json = Flights.read("/find-flights.json")

@@ -3,16 +3,16 @@ package com.kaizensundays.flights.service.dao
 import com.kaizensundays.flights.service.JournalContext
 import com.kaizensundays.flights.service.messages.Journal
 import com.kaizensundays.flights.service.messages.JournalState
-import org.junit.After
-import org.junit.Before
-import org.junit.Test
-import org.junit.runner.RunWith
+import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.test.context.ActiveProfiles
-import org.springframework.test.context.junit4.SpringRunner
+import org.springframework.test.context.junit.jupiter.SpringExtension
+import org.junit.jupiter.api.extension.ExtendWith
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.test.assertEquals
@@ -23,7 +23,7 @@ import kotlin.test.assertEquals
  * @author Sergey Chuykov
  */
 @ActiveProfiles("test")
-@RunWith(SpringRunner::class)
+@ExtendWith(SpringExtension::class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE, classes = [JournalContext::class])
 class JournalDaoTest {
 
@@ -48,7 +48,7 @@ class JournalDaoTest {
         journal("{3}"),
     )
 
-    @Before
+    @BeforeEach
     fun before() {
         df.timeZone = TimeZone.getTimeZone("America/New_York")
 
@@ -58,7 +58,7 @@ class JournalDaoTest {
         }
     }
 
-    @After
+    @AfterEach
     fun after() {
         dao.truncate()
     }

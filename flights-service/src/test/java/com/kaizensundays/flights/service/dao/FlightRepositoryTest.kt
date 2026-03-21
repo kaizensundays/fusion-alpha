@@ -1,9 +1,8 @@
 package com.kaizensundays.flights.service.dao
 
 import com.kaizensundays.flights.service.messages.FlightExt
-import junit.framework.TestCase.assertNotNull
-import org.junit.Test
-import org.junit.runner.RunWith
+import kotlin.test.assertNotNull
+import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.autoconfigure.ImportAutoConfiguration
 import org.springframework.boot.autoconfigure.data.jpa.JpaRepositoriesAutoConfiguration
@@ -15,12 +14,13 @@ import org.springframework.boot.autoconfigure.transaction.TransactionAutoConfigu
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories
 import org.springframework.test.context.ActiveProfiles
-import org.springframework.test.context.junit4.SpringRunner
+import org.springframework.test.context.junit.jupiter.SpringExtension
+import org.junit.jupiter.api.extension.ExtendWith
 
 /**
  * Created: Sunday 6/1/2025, 12:23 PM Eastern Time
  *
- * @author Sergey Chuykov
+ * @author Sergey Chuykov & Junie (gpt-5-2025-08-07)
  */
 @ImportAutoConfiguration(
     classes = [
@@ -34,7 +34,7 @@ import org.springframework.test.context.junit4.SpringRunner
 @EntityScan(basePackageClasses = [FlightExt::class])
 @EnableJpaRepositories(basePackageClasses = [FlightRepository::class])
 @ActiveProfiles("test")
-@RunWith(SpringRunner::class)
+@ExtendWith(SpringExtension::class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE, classes = [JpaTestContext::class])
 class FlightRepositoryTest {
 

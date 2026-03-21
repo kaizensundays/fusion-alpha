@@ -5,7 +5,7 @@ import com.kaizensundays.lab.grpc.Flight
 import com.kaizensundays.lab.grpc.FlightRoute
 import com.kaizensundays.lab.grpc.FlightStatus
 import com.kaizensundays.lab.grpc.Schedule
-import org.junit.Test
+import org.junit.jupiter.api.Test
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import java.time.ZoneId
@@ -17,7 +17,7 @@ import kotlin.test.assertEquals
 /**
  * Created: Saturday 5/31/2025, 1:14 PM Eastern Time
  *
- * @author Sergey Chuykov
+ * @author Sergey Chuykov & Junie (gpt-5-2025-08-07)
  */
 class SomeTest {
 
