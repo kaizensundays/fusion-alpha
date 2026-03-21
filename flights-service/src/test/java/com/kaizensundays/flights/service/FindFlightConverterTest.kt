@@ -3,14 +3,14 @@ package com.kaizensundays.flights.service
 import com.kaizensundays.flights.service.Flights.adjustFormat
 import com.kaizensundays.flights.service.Flights.format
 import com.kaizensundays.flights.service.messages.FindFlight
-import org.junit.Test
+import org.junit.jupiter.api.Test
 import java.time.LocalDate
 import kotlin.test.assertEquals
 
 /**
  * Created: Sunday 10/31/2021, 1:07 PM Eastern Time
  *
- * @author Sergey Chuykov
+ * @author Sergey Chuykov & Junie (gpt-5-2025-08-07)
  */
 class FindFlightConverterTest : MuTestSupport() {
 
