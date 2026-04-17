@@ -5,17 +5,17 @@ import kotlin.test.assertNotNull
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.autoconfigure.ImportAutoConfiguration
-import org.springframework.boot.autoconfigure.data.jpa.JpaRepositoriesAutoConfiguration
-import org.springframework.boot.autoconfigure.domain.EntityScan
-import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
-import org.springframework.boot.autoconfigure.jdbc.DataSourceTransactionManagerAutoConfiguration
-import org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration
-import org.springframework.boot.autoconfigure.transaction.TransactionAutoConfiguration
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.junit.jupiter.SpringExtension
 import org.junit.jupiter.api.extension.ExtendWith
+import org.springframework.boot.data.jpa.autoconfigure.DataJpaRepositoriesAutoConfiguration
+import org.springframework.boot.hibernate.autoconfigure.HibernateJpaAutoConfiguration
+import org.springframework.boot.jdbc.autoconfigure.DataSourceAutoConfiguration
+import org.springframework.boot.jdbc.autoconfigure.DataSourceTransactionManagerAutoConfiguration
+import org.springframework.boot.persistence.autoconfigure.EntityScan
+import org.springframework.boot.transaction.autoconfigure.TransactionAutoConfiguration
 
 /**
  * Created: Sunday 6/1/2025, 12:23 PM Eastern Time
@@ -26,7 +26,7 @@ import org.junit.jupiter.api.extension.ExtendWith
     classes = [
         DataSourceAutoConfiguration::class,
         DataSourceTransactionManagerAutoConfiguration::class,
-        JpaRepositoriesAutoConfiguration::class,
+        DataJpaRepositoriesAutoConfiguration::class,
         HibernateJpaAutoConfiguration::class,
         TransactionAutoConfiguration::class
     ]

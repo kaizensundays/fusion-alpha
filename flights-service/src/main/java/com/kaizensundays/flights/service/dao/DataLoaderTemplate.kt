@@ -14,7 +14,7 @@ import javax.sql.DataSource
  */
 abstract class DataLoaderTemplate(private val dataSource: DataSource) {
 
-    private fun <E> doLoad(sink: FluxSink<E>, sql: String, rowMapper: (rs: ResultSet) -> E) {
+    private fun <E : Any> doLoad(sink: FluxSink<E>, sql: String, rowMapper: (rs: ResultSet) -> E) {
 
         var connection: Connection? = null
         var ps: PreparedStatement? = null
@@ -37,7 +37,7 @@ abstract class DataLoaderTemplate(private val dataSource: DataSource) {
 
     }
 
-    fun <E> load(sql: String, rowMapper: (rs: ResultSet) -> E): Flux<E> {
+    fun <E : Any> load(sql: String, rowMapper: (rs: ResultSet) -> E): Flux<E> {
         return try {
             Flux.create { sink ->
                 doLoad(sink, sql, rowMapper)
